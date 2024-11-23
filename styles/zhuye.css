@@ -1,1 +1,7 @@
-header{h1:
+.special {
+  color: red;
+}
+body {background-color: rgb(117 190 218 / 50%)}
+p {
+  color: blue;
+}
