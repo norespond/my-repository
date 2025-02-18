@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页脚上方音乐播放器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        #music-player {
+            background-color: #444;
+            color: #fff;
+            padding: 20px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0;
+            /* 去掉外边距 */
+        }
+
+        h2 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+        <!-- 这里可以放置网页的主要内容 -->
+        <h1>欢迎来到我的个人网页</h1>
+        <p>这是一些内容...</p>
+    </main>
+
+    <div id="music-player">
+        <h2>音乐播放器</h2>
+        <ul id="music-list">
+            <li><button onclick="playMusic('song1.mp3')">歌曲 1</button></li>
+            <li><button onclick="playMusic('song2.mp3')">歌曲 2</button></li>
+            <li><button onclick="playMusic('song3.mp3')">歌曲 3</button></li>
+            <!-- 如有更多歌曲，可继续添加 -->
+        </ul>
+        <audio id="audio" controls></audio>
+    </div>
+
+    <footer>
+        &copy; 2023 个人网页
+    </footer>
+
+    <script>
+        const audio = document.getElementById('audio');
+
+        function playMusic(song) {
+            audio.src = song;
+            audio.play();
+        }  
+    </script>
+
+</body>
+
+</html>

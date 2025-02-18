@@ -1,34 +1,74 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width">
-    <title>秋风的个人网站</title>
-    <link rel="icon" href="images/game.ico">
-     <link rel="stylesheet" href="styles/zhuye.css">
-  </head>
-  <body>
-    <header>
-      <!-- 本站所有网页的统一主标题 -->
-      <h1>主页</h1>
-      <img src="images/樱森.png" alt="樱吹雪-千年之恋" />
-    </header>
-    <nav>
-      <!-- 本站统一的导航栏 -->
-      <ul>
-        <li><a href="index.html">主页</a></li>
-        <li ><a href="shiyong.html">实用网址</a></li>
-        <li><a href="#">展示</a></li>
-        <li><a href="n1">练习展示</a></li>
-          <li><a href="lll.html">live2d</a></li>
-      </ul>
-    </nav>
-    <main>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>秋风的个人网站</title>
+  <link rel="icon" href="images/game.ico">
+  <link rel="stylesheet" href="styles/zhuye.css">
+  <link rel="stylesheet" type="text/css" href="./styles/live2d.css">
+</head>
+
+<body>
+  <header>
+    <!-- 本站所有网页的统一主标题 -->
+    <h1>主页</h1>
+    <img src="images/樱森.png" alt="樱吹雪-千年之恋" />
+  </header>
+  <nav>
+    <!-- 本站统一的导航栏 -->
+    <ul>
+      <li><a href="index.html">主页</a></li>
+      <li><a href="shiyong.html">实用网址</a></li>
+      <li><a href="#">展示</a></li>
+      <li><a href="music">音乐</a></li>
+    </ul>
+  </nav>
+  <main>
     <p>这里什么都没有</p>
-    </main>
-    <footer>
-      <p>备注：资源全部来源于网络。</p>
-      <p>这是页脚</p>
-    </footer>
-  </body>
+  </main>
+  <div id="landlord" class="lock">
+    <div id="l2d-message"></div>
+    <div id="l2d-control">
+      <button id="l2d-drag">
+        <img src="./images/drag.svg" alt="" draggable="false" />
+      </button>
+      <button id="l2d-setting">
+        <img src="./images/setting.svg" alt="" draggable="false" />
+      </button>
+      <button id="l2d-hide">
+        <img src="./images/hide.svg" alt="" draggable="false" />
+      </button>
+      <button id="l2d-about">
+        <img src="./images/about.svg" alt="" draggable="false" />
+      </button>
+    </div>
+    <div id="l2d-setting-box" class="l2d-box">
+      <p>打扰了，还没做好，你去看看别的吧。。。</p>
+    </div>
+    <div id="l2d-hide-box" class="l2d-box">
+      <h1>真的要离开我吗？</h1>
+      <button id="l2d-hide-yes">离开</button>
+      <button id="l2d-hide-no">留下</button>
+    </div>
+    <div id="l2d-about-box" class="l2d-box">
+      <p>资源来源与网络。</p>
+      <button id="l2d-about-yes">我已知晓</button>
+    </div>
+    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+  </div>
+  <script type="text/javascript" src="./javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="./javascripts/live2d.js"></script>
+  <script type="text/javascript" src="./javascripts/message.js"></script>
+  <script type="text/javascript" src="./javascripts/extension.js"></script>
+  <script type="text/javascript">
+    loadlive2d("live2d", "./models/Pio/model.json");
+  </script>
+  <footer>
+    <p>备注：资源全部来源于网络。</p>
+    <p>这是页脚</p>
+  </footer>
+</body>
+
 </html>
