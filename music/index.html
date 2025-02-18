@@ -4,31 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>页脚上方音乐播放器</title>
+    <title>听音乐</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
+            background-image: url('../images/haiyi-xingchen.jpg');
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            align-items: center;
         }
 
         main {
             flex: 1;
             padding: 20px;
-            background-color: #fff;
+            background-color: rgba(34, 177, 224, 0.8);
+            /* 淡蓝色 */
+            width: 80%;
         }
 
         #music-player {
-            background-color: #444;
-            color: #fff;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* 白色 */
+            color: #000;
             padding: 20px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-            margin-bottom: 0;
-            /* 去掉外边距 */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border-radius: 10px;
+            width: 50%;
+        }
+
+        #music-list-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* 白色 */
+            color: #000;
+            padding: 20px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border-radius: 10px;
+            width: 50%;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         h2 {
@@ -40,6 +61,8 @@
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
+            color: white;
         }
 
         li {
@@ -48,7 +71,7 @@
         }
 
         button {
-            background-color: #28a745;
+            background-color: #6c757d;
             color: white;
             border: none;
             padding: 10px;
@@ -59,7 +82,12 @@
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #5a6268;
+        }
+
+        .control-button {
+            width: auto;
+            margin: 5px;
         }
 
         audio {
@@ -69,10 +97,11 @@
         }
 
         footer {
-            background-color: #007BFF;
+            background-color: #6c757d;
             color: white;
             text-align: center;
             padding: 10px;
+            width: 100%;
         }
     </style>
 </head>
@@ -81,32 +110,90 @@
 
     <main>
         <!-- 这里可以放置网页的主要内容 -->
-        <h1>欢迎来到我的个人网页</h1>
-        <p>这是一些内容...</p>
+        <h1>欢迎</h1>
+        <p>以下音乐全部属于于个人爱好收集。</p>
     </main>
 
     <div id="music-player">
         <h2>音乐播放器</h2>
-        <ul id="music-list">
-            <li><button onclick="playMusic('song1.mp3')">歌曲 1</button></li>
-            <li><button onclick="playMusic('song2.mp3')">歌曲 2</button></li>
-            <li><button onclick="playMusic('song3.mp3')">歌曲 3</button></li>
-            <!-- 如有更多歌曲，可继续添加 -->
-        </ul>
         <audio id="audio" controls></audio>
+        <div>
+            <button class="control-button" onclick="prevSong()">上一首</button>
+            <button class="control-button" onclick="nextSong()">下一首</button>
+            <button class="control-button" onclick="toggleLoop()">单曲循环</button>
+            <button class="control-button" onclick="toggleAllLoop()">全部循环</button>
+        </div>
+    </div>
+
+    <div id="music-list-container">
+        <ul id="music-list">
+            <!-- 音乐列表将由 JavaScript 动态生成 -->
+        </ul>
     </div>
 
     <footer>
-        &copy; 2023 个人网页
+        &copy; 2025
     </footer>
 
     <script>
         const audio = document.getElementById('audio');
+        const musicList = document.getElementById('music-list');
 
-        function playMusic(song) {
-            audio.src = song;
+        const songs = [
+            '13.mp3', '2.mp3', '4.mp3', '春花彼方.mp3', '海和雪-02.mp3', '海と雪のシアンブル-01.mp3',
+            '海と雪のシアンブル-02.mp3', '天之空6.mp3', '天之空7.mp3', '未来描绘.ogg', '星尘 - 星之遗物.mp3',
+            '星空TeaPartyえ.mp3', '星の在り処 (星之所在)_初音ミク.mp3', 'be confidence full ver_.mp3',
+            'bgm01.mp3', 'bgm03.mp3', 'bgm11.mp3', 'bgm14.mp3', 'bgm32.mp3', 'bjs.mp3', 'eufonie1.mp3',
+            'eufonie2.mp3', 'eufonie3.mp3', 'eufonie4.mp3', 'LSR-02.mp3', 'LSR-03.mp3', 'LSR-09.mp3',
+            'LSR-10.mp3', 'MargED.mp3', 'MargOP.wav', 'my first love.mp3', 'unlucky2.mp3', 'unlucky7.mp3',
+            'キミと歩いてゆけたなら.mp3'
+        ];
+
+        let currentSongIndex = 0;
+        let isSingleLoop = false;
+        let isAllLoop = false;
+
+        songs.forEach((song, index) => {
+            const li = document.createElement('li');
+            const button = document.createElement('button');
+            button.textContent = song;
+            button.onclick = () => playMusic(index);
+            li.appendChild(button);
+            musicList.appendChild(li);
+        });
+
+        function playMusic(index) {
+            currentSongIndex = index;
+            audio.src = songs[index];
             audio.play();
-        }  
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            playMusic(currentSongIndex);
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            playMusic(currentSongIndex);
+        }
+
+        function toggleLoop() {
+            isSingleLoop = !isSingleLoop;
+            audio.loop = isSingleLoop;
+            alert(`单曲循环: ${isSingleLoop ? '开启' : '关闭'}`);
+        }
+
+        function toggleAllLoop() {
+            isAllLoop = !isAllLoop;
+            alert(`全部循环: ${isAllLoop ? '开启' : '关闭'}`);
+        }
+
+        audio.addEventListener('ended', () => {
+            if (isAllLoop && !isSingleLoop) {
+                nextSong();
+            }
+        });
     </script>
 
 </body>
