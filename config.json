@@ -1,0 +1,70 @@
+{
+    "title": "秋风的小站",
+    "theme": {
+        "theme": "Liora",
+        "displayName": "Liora",
+        "colors": {
+            "autoSwitch": {
+                "displayName": "Auto",
+                "light": "sun",
+                "dark": "moon",
+                "icon": {
+                    "icon": "fa-solid fa-circle-half-stroke",
+                    "color": "#808080",
+                    "background": "linear-gradient(45deg, #eeeeee 50%, #1c1c1c 50%)"
+                }
+            },
+            "enable": [
+                "sun",
+                "!autoSwitch",
+                "moon"
+            ],
+            "default": "!autoSwitch"
+        }
+    },
+    "masterInfo": {
+        "name": "秋风",
+        "avatar": "./assets/images/avatar.png",
+        "website": " https://norespond.github.io/my-repository/",
+        "socialLink": {
+            "link": {
+                "bilibili": "#",
+                "github": " https://norespond.github.io/my-repository/",
+                "email": "javascript:showEmail()"
+            },
+            "icon": {
+                "bilibili": "fa-brands fa-bilibili",
+                "github": "fa-brands fa-github",
+                "email": "fa-solid fa-envelope"
+            },
+            "enable": [
+                "bilibili",
+                "github",
+                "email"
+            ]
+        }
+    },
+    "pageHead": {
+        "typedContent": [
+            "求知若饥，虚心若愚",
+            "学而不思则罔，思而不学则殆",
+            "别放弃，办法总是会有的"
+        ]
+    },
+    "icp": {
+        "info": {
+            "code": {
+                "china": "",
+                "moegov": ""
+            },
+            "link": {
+                "china": "这里什么都没有哦。",
+                "moegov": "这里什么都没有哦。"
+            }
+        },
+        "enable": [
+            "moegov",
+            "china"
+        ]
+    }
+}
