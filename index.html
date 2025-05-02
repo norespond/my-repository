@@ -26,7 +26,6 @@
     <script src="./assets/scripts/theme-loader.js"></script>
     <script src="./assets/scripts/index.js"></script>
 
-
     <script src="
         https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js
         "></script>
@@ -62,6 +61,7 @@
                         <a id="hitokoto-text" href="" target="_blank">Loading...</a>
                     </div>
                 </div>
+                <div id="player"></div>
                 <div class="card-item" id="settings">
                     <span class="title"><i class="fa-solid fa-sliders"></i>浏览设置</span>
                     <div class="content">
@@ -78,12 +78,10 @@
             <div class="content-page">
                 <div class="markdown-content" src="./assets/markdown/content-page.md"></div>
                 <div class="markdown-content" src="./assets/markdown/content-page1.md"></div>
-                <div class="markdown-content" src="./n1/websites.md"></div>
-                <div class="markdown-content" src="./n2/text.md"></div>
+                <div class="markdown-content" src="./n3/st.md"></div>
             </div>
         </div>
     </div>
-    <div id="player"></div>
 
     <script src="./live2d/dist/autoload.js"></script>
 
@@ -99,184 +97,7 @@
         <span>Powered by <a href="https://github.com/ChengCheng0v0/ACG-Home" target="_blank">ACG-Home</a></span>
     </div>
 
-    <script>
-        const ap = new APlayer({
-            container: document.getElementById('player'),
-            fixed: true,
-            audio: [{
-                name: '春花彼方',
-                artist: 'artist',
-                url: './music/春花彼方.mp3',
-            },
-            {
-                name: '星の在り処 (星之所在)',
-                artist: '初音ミク',
-                url: './music/星の在り処 (星之所在)_初音ミク.mp3',
-            },
-            {
-                name: '13',
-                artist: 'artist',
-                url: './music/13.mp3',
-            },
-            {
-                name: '2',
-                artist: 'artist',
-                url: './music/2.mp3',
-            },
-            {
-                name: '4',
-                artist: 'artist',
-                url: './music/4.mp3',
-            },
-            {
-                name: '海和雪-02',
-                artist: 'artist',
-                url: './music/海和雪-02.mp3',
-            },
-            {
-                name: '海と雪のシアンブル-01',
-                artist: 'artist',
-                url: './music/海と雪のシアンブル-01.mp3',
-            },
-            {
-                name: '海と雪のシアンブル-02',
-                artist: 'artist',
-                url: './music/海と雪のシアンブル-02.mp3',
-            },
-            {
-                name: '天之空6',
-                artist: 'artist',
-                url: './music/天之空6.mp3',
-            },
-            {
-                name: '天之空7',
-                artist: 'artist',
-                url: './music/天之空7.mp3',
-            },
-            {
-                name: '未来描绘',
-                artist: 'artist',
-                url: './music/未来描绘.ogg',
-            },
-            {
-                name: '星尘 - 星之遗物',
-                artist: 'artist',
-                url: './music/星尘 - 星之遗物.mp3',
-            },
-            {
-                name: '星空TeaPartyえ',
-                artist: 'artist',
-                url: './music/星空TeaPartyえ.mp3',
-            },
-            {
-                name: 'be confidence full ver_',
-                artist: 'artist',
-                url: './music/be confidence full ver_.mp3',
-            },
-            {
-                name: 'bgm01',
-                artist: 'artist',
-                url: './music/bgm01.mp3',
-            },
-            {
-                name: 'bgm03',
-                artist: 'artist',
-                url: './music/bgm03.mp3',
-            },
-            {
-                name: 'bgm11',
-                artist: 'artist',
-                url: './music/bgm11.mp3',
-            },
-            {
-                name: 'bgm14',
-                artist: 'artist',
-                url: './music/bgm14.mp3',
-            },
-            {
-                name: 'bgm32',
-                artist: 'artist',
-                url: './music/bgm32.mp3',
-            },
-            {
-                name: 'bjs',
-                artist: 'artist',
-                url: './music/bjs.mp3',
-            },
-            {
-                name: 'eufonie1',
-                artist: 'artist',
-                url: './music/eufonie1.mp3',
-            },
-            {
-                name: 'eufonie2',
-                artist: 'artist',
-                url: './music/eufonie2.mp3',
-            },
-            {
-                name: 'eufonie3',
-                artist: 'artist',
-                url: './music/eufonie3.mp3',
-            },
-            {
-                name: 'eufonie4',
-                artist: 'artist',
-                url: './music/eufonie4.mp3',
-            },
-            {
-                name: 'LSR-02',
-                artist: 'artist',
-                url: './music/LSR-02.mp3',
-            },
-            {
-                name: 'LSR-03',
-                artist: 'artist',
-                url: './music/LSR-03.mp3',
-            },
-            {
-                name: 'LSR-09',
-                artist: 'artist',
-                url: './music/LSR-09.mp3',
-            },
-            {
-                name: 'LSR-10',
-                artist: 'artist',
-                url: './music/LSR-10.mp3',
-            },
-            {
-                name: 'MargED',
-                artist: 'artist',
-                url: './music/MargED.mp3',
-            },
-            {
-                name: 'MargOP',
-                artist: 'artist',
-                url: './music/MargOP.wav',
-            },
-            {
-                name: 'my first love',
-                artist: 'artist',
-                url: './music/my first love.mp3',
-            },
-            {
-                name: 'unlucky2',
-                artist: 'artist',
-                url: './music/unlucky2.mp3',
-            },
-            {
-                name: 'unlucky7',
-                artist: 'artist',
-                url: './music/unlucky7.mp3',
-            },
-            {
-                name: 'キミと歩いてゆけたなら',
-                artist: 'artist',
-                url: './music/キミと歩いてゆけたなら.mp3',
-            }
-            ]
-        });
-    </script>
-
+    <script src="./music/music.js"></script>
     <iframe id="theme-color-loader-iframe" src="./loaders/theme-color.html"></iframe>
 
     <script>
