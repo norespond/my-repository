@@ -28,9 +28,9 @@
         "website": " https://norespond.github.io/my-repository/",
         "socialLink": {
             "link": {
-                "bilibili": "#",
-                "github": " https://norespond.github.io/my-repository/",
-                "email": "javascript:showEmail()"
+                "bilibili": "./n3/404-error-page/src/404.html",
+                "github": "https://norespond.github.io/my-repository/",
+                "email": "./n3/404-error-page/src/404.html"
             },
             "icon": {
                 "bilibili": "fa-brands fa-bilibili",
@@ -46,8 +46,8 @@
     },
     "pageHead": {
         "typedContent": [
-            
-            
+            "求知若饥，虚心若愚",
+            "Stay Hungry Stay Foolish"
         ]
     },
     "icp": {

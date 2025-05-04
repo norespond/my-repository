@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const ap = new APlayer({
         container: document.getElementById('player'),
-        mini: true,
+        mini: false,
         autoplay: false,
         theme: '#FADFA3',
         loop: 'all',
@@ -9,10 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
         preload: 'auto',
         volume: 0.7,
         mutex: true,
-        listFolded: false,
-        listMaxHeight: 300,  // 调整为更大的高度
+        listFolded: true,
         fixed: false,
-        lrcType: 3,
+        lrcType: 0,
         audio: [] // 先初始化为空，后续通过 API 添加
     });
 
@@ -28,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const audioList = songsData.map(song => ({
                 name: song.name,
                 artist: song.artist,
-                cover: song.cover || "../favicon.ico",  // 可以设置不同封面
+                cover: song.cover || "https://norespond.github.io/my-repository/favicon.ico",  // 可以设置不同封面
                 url: repoBaseUrl + encodeURIComponent(song.file),
             }));
             ap.list.add(audioList);
