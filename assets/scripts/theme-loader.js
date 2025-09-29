@@ -15,7 +15,9 @@ class ThemeManager {
     // 解析主题
     parse() {
         // 构建主题目录
-        themePath = "./assets/themes/" + config.content.theme.theme;
+        const basePath = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
+        themePath = basePath + "/assets/themes/" + config.content.theme.theme;
+
         console.log("%c[I]%c " + `Theme Path: ${themePath}`, "background-color: #00896c;", "");
 
         // 使用 XML 获取主题的元数据
@@ -56,104 +58,94 @@ class ThemeManager {
     // 加载主题
     load() {
         // 创建一个数组，用来存放生成的 Style 外部资源链接 HTML
-        var styleLinks;
+        var styleLinks = []; // 初始化为空数组
 
         // 解析基本样式 URL 并赋值给数组
         styleLinks = metaData.files.styles
             .map(key => {
                 if (key) {
-                    // 创建 <link> 标签
                     return `<link rel="stylesheet" href="${themePath}/styles/${key}" />`;
                 }
                 console.error("%c[E]%c " + `主题 ${key} 样式 Tag 生成失败，元数据可能存在问题`, "background-color: #cb1b45;", "");
                 throw new Error("主题样式 Tag 生成失败，无法继续执行操作");
             })
-            .filter(Boolean); // 过滤掉无效的值
+            .filter(Boolean);
+
+        let resolvedTargetColor = localStorage.getItem("theme.color");
+        if (resolvedTargetColor === "!autoSwitch") {
+            console.log("%c[I]%c " + `当前配色方案为 !autoSwitch 自动切换，用户的浏览器深色模式启用状态为: ${window.matchMedia("(prefers-color-scheme: dark)").matches}`, "background-color: #00896c;", "");
+            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                resolvedTargetColor = config.content.theme.colors.autoSwitch.dark;
+            } else {
+                resolvedTargetColor = config.content.theme.colors.autoSwitch.light;
+            }
+        }
+        // Fallback if resolvedTargetColor is null/undefined (e.g., initial load before default is set)
+        if (!resolvedTargetColor) {
+            resolvedTargetColor = config.content.theme.colors.default;
+            if (resolvedTargetColor === "!autoSwitch") { // Re-resolve if default is autoSwitch
+                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    resolvedTargetColor = config.content.theme.colors.autoSwitch.dark;
+                } else {
+                    resolvedTargetColor = config.content.theme.colors.autoSwitch.light;
+                }
+            }
+        }
+
 
         // 解析配色方案样式 URL 并插入数组
         metaData.colors.index
             .map(key => {
-                let targetColor = localStorage.getItem("theme.color"); // 存储目标配色方案的变量
+                const styles = metaData.colors.list[key]?.files?.styles;
 
-                // 如果目标配色方案为保留关键字“!autoSwitch”（自动切换配色方案），将其改为实际需要加载的配色方案
-                if (targetColor === "!autoSwitch") {
-                    console.log("%c[I]%c " + `当前配色方案为 !autoSwitch 自动切换，用户的浏览器深色模式启用状态为: ${window.matchMedia("(prefers-color-scheme: dark)").matches}`, "background-color: #00896c;", "");
-                    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                        targetColor = config.content.theme.colors.autoSwitch.dark;
-                    } else {
-                        targetColor = config.content.theme.colors.autoSwitch.light;
-                    }
+                // 根据解析后的目标配色方案决定是否生成标签
+                if (styles && resolvedTargetColor === key) {
+                    return styles.map(file => `<link rel="stylesheet" href="${themePath}/colors/${key}/styles/${file}" />`).join("");
+                } else {
+                    console.log("%c[I]%c " + `跳过了生成 ${key} 配色方案样式标签的步骤，因为 key 的值不符合用户设置 (${resolvedTargetColor} != ${key})`, "background-color: #00896c;", "");
+                    return; // 返回空，过滤器会移除
                 }
-
-                const styles = metaData.colors.list[key].files.styles; // 获取对应的 styles
-
-                // 根据目标配色方案决定是否生成标签
-                if (styles && targetColor === key) {
-                    // 如果 styles 是数组，生成多个 link 标签
-                    return styles.map(file => `<link rel="stylesheet" href="${themePath}/colors/${key}/styles/${file}" />`).join(""); // 将生成的所有 link 标签拼接成字符串
-                } else if (localStorage.getItem("theme.color") !== key) {
-                    console.log("%c[I]%c " + `跳过了生成 ${key} 配色方案样式标签的步骤，因为 key 的值不符合用户设置`, "background-color: #00896c;", "");
-                    return;
-                }
-                console.error("%c[E]%c " + `配色方案 ${key} 样式 Tag 生成失败，元数据可能存在问题`, "background-color: #cb1b45;", "");
-                throw new Error("配色方案样式 Tag 生成失败，无法继续执行操作");
             })
-            .filter(Boolean) // 过滤掉无效的值
+            .filter(Boolean)
             .forEach(linkTags => {
-                styleLinks.push(linkTags); // 将生成的 link 标签插入到数组中
+                styleLinks.push(linkTags);
             });
 
-        console.log("%c[I]%c " + `待插入的 Style 外部资源链接: ${styleLinks}`, "background-color: #00896c;", "");
+        console.log("%c[I]%c " + `待插入的 Style 外部资源链接: ${styleLinks.join("")}`, "background-color: #00896c;", "");
 
         // 创建一个数组，用来存放生成的 Script 外部资源链接 HTML
-        var scriptLinks;
+        var scriptLinks = []; // 初始化为空数组
 
         // 解析基本脚本 URL 并赋值给数组
         scriptLinks = metaData.files.scripts
             .map(key => {
                 if (key) {
-                    // 创建 <script> 标签
                     return `<script src="${themePath}/scripts/${key}"></script>`;
                 }
                 console.error("%c[E]%c " + `主题 ${key} 脚本 Tag 生成失败，元数据可能存在问题`, "background-color: #cb1b45;", "");
                 throw new Error("主题脚本 Tag 生成失败，无法继续执行操作");
             })
-            .filter(Boolean); // 过滤掉无效的值
+            .filter(Boolean);
 
         // 解析配色方案脚本 URL 并插入数组
         metaData.colors.index
             .map(key => {
-                let targetColor = localStorage.getItem("theme.color"); // 存储目标配色方案的变量
+                const scripts = metaData.colors.list[key]?.files?.scripts;
 
-                // 如果目标配色方案为保留关键字“!autoSwitch”（自动切换配色方案），将其改为实际需要加载的配色方案
-                if (targetColor === "!autoSwitch") {
-                    console.log("%c[I]%c " + `当前配色方案为 !autoSwitch 自动切换，用户的浏览器深色模式启用状态为: ${window.matchMedia("(prefers-color-scheme: dark)").matches}`, "background-color: #00896c;", "");
-                    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                        targetColor = config.content.theme.colors.autoSwitch.dark;
-                    } else {
-                        targetColor = config.content.theme.colors.autoSwitch.light;
-                    }
+                // 根据解析后的目标配色方案决定是否生成标签
+                if (scripts && resolvedTargetColor === key) {
+                    return scripts.map(file => `<script src="${themePath}/colors/${key}/scripts/${file}"></script>`).join("");
+                } else {
+                    console.log("%c[I]%c " + `跳过了生成 ${key} 配色方案脚本标签的步骤，因为 key 的值不符合用户设置 (${resolvedTargetColor} != ${key})`, "background-color: #00896c;", "");
+                    return; // 返回空，过滤器会移除
                 }
-
-                const scripts = metaData.colors.list[key].files.scripts; // 获取对应的 scripts
-
-                // 根据目标配色方案决定是否生成标签
-                if (scripts && targetColor === key) {
-                    // 如果 scripts 是数组，生成多个 script 标签
-                    return scripts.map(file => `<script src="${themePath}/colors/${key}/scripts/${file}"></script>`).join(""); // 将生成的所有 link 标签拼接成字符串
-                } else if (localStorage.getItem("theme.color") !== key) {
-                    console.log("%c[I]%c " + `跳过了生成 ${key} 配色方案脚本标签的步骤，因为 key 的值不符合用户设置`, "background-color: #00896c;", "");
-                    return;
-                }
-                console.error("%c[E]%c " + `配色方案 ${key} 脚本 Tag 生成失败，元数据可能存在问题`, "background-color: #cb1b45;", "");
-                throw new Error("配色方案脚本 Tag 生成失败，无法继续执行操作");
             })
-            .filter(Boolean) // 过滤掉无效的值
+            .filter(Boolean)
             .forEach(linkTags => {
-                scriptLinks.push(linkTags); // 将生成的 link 标签插入到数组中
+                scriptLinks.push(linkTags);
             });
 
-        console.log("%c[I]%c " + `待插入的 Script 外部资源链接: ${scriptLinks}`, "background-color: #00896c;", "");
+        console.log("%c[I]%c " + `待插入的 Script 外部资源链接: ${scriptLinks.join("")}`, "background-color: #00896c;", "");
 
         // 拼接 styleLinks 和 scriptLinks
         const resTag = [...styleLinks, ...scriptLinks];
@@ -169,64 +161,77 @@ class ThemeManager {
 
     // 设置配色方案
     setColor(colorId) {
+        // 先确保 local storage 中有值，如果还没有，就先设置
+        if (localStorage.getItem("theme.color") === null) {
+            localStorage.setItem("theme.color", colorId);
+            // 首次设置后，直接加载，不进行动画
+            themeManager.load();
+            if (document.querySelector(".themes")) {
+                loadThemeSelEff();
+            }
+            return;
+        }
+
         if (colorId === localStorage.getItem("theme.color")) {
             console.warn("%c[W]%c " + `当前配色方案已是 ${colorId}，与其白白重载一次，不如我现在就中断更改`, "background-color: #e98b2a;", "");
+            // 即使相同，也确保选中状态是正确的
+            if (document.querySelector(".themes")) {
+                loadThemeSelEff();
+            }
+            return;
         } else {
             // 隐藏滚动条
-            document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`; // 给 body 加一个与滚动条宽度相同的右边距以防止页面抖动
+            document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`;
             document.body.style.overflow = "hidden";
 
             // 开始播放加载动画
-            document.getElementById("theme-color-loader-iframe").className = "start"; // 播放开始动画
+            document.getElementById("theme-color-loader-iframe").className = "start";
 
             // 加载配色方案
             setTimeout(() => {
-                // 检查索引中是否存在配色方案
-                // 保留关键字 !autoSwitch 可以不需要在索引中存在
                 if (metaData.colors.index.includes(colorId) || colorId === "!autoSwitch") {
                     try {
                         localStorage.setItem("theme.color", colorId);
-
-                        // 重新加载主题
                         themeManager.load();
-
                         console.log("%c[I]%c " + `配色方案已更改为: ${colorId}`, "background-color: #00896c;", "");
                     } catch (error) {
                         console.error("%c[E]%c " + `无法将配色方案更改为 ${colorId}: ${error}`, "background-color: #cb1b45;", "");
+                        // 动画结束后也要恢复滚动条
+                        document.getElementById("theme-color-loader-iframe").className = "end";
+                        document.body.style.paddingRight = "unset";
+                        document.body.style.overflow = "unset";
                         throw new Error("配色方案更改失败: ", error);
                     }
                 } else {
                     console.error("%c[E]%c " + `无法将配色方案更改为 ${colorId}，因为未在主题配色方案索引中匹配到传入的值`, "background-color: #cb1b45;", "");
+                    // 动画结束后也要恢复滚动条
+                    document.getElementById("theme-color-loader-iframe").className = "end";
+                    document.body.style.paddingRight = "unset";
+                    document.body.style.overflow = "unset";
                     throw new Error("配色方案更改失败，未在主题配色方案索引中匹配到传入的值");
                 }
 
-                // 加载配色方案设置的选中效果
-                loadThemeSelEff();
             }, colorSwitchSleepTime);
 
             // 结束播放加载动画
             (() => {
                 setTimeout(() => {
-                    document.getElementById("theme-color-loader-iframe").className = "end"; // 播放结束动画
-                    document.body.style.paddingRight = "unset"; // 恢复 body 的右边距
-                    document.body.style.overflow = "unset"; // 恢复显示滚动条
+                    document.getElementById("theme-color-loader-iframe").className = "end";
+                    document.body.style.paddingRight = "unset";
+                    document.body.style.overflow = "unset";
+                    if (document.querySelector(".themes")) {
+                        loadThemeSelEff();
+                    }
                 }, minimumColorSwitchTime);
             })();
         }
     }
 
     runScripts() {
-        // 遍历 <theme> 中的所有 <script> 标签
         document.querySelectorAll("theme > script").forEach(script => {
-            // 获取当前 script 标签的 src
             const src = script.src;
-
-            // 如果 src 存在（确保它是一个外部链接）
             if (src) {
-                // 移除原有的 script 标签
                 script.remove();
-
-                // 创建一个新的 script 标签并重新插入
                 const newScript = document.createElement("script");
                 newScript.src = src;
                 document.head.appendChild(newScript);
@@ -237,31 +242,55 @@ class ThemeManager {
 
 // 加载配色方案设置的选中效果
 function loadThemeSelEff() {
-    // 如果存在已加载的选中效果则清除它
-    if (document.querySelector(".theme-item.enable")) {
-        document.querySelector(".theme-item.enable").setAttribute("class", "theme-item");
+    const currentColor = localStorage.getItem("theme.color");
+    if (!currentColor) {
+        console.warn("%c[W]%c " + `localStorage 中没有 theme.color，无法设置选中效果。`, "background-color: #e98b2a;", "");
+        return;
     }
 
-    // 插入新的选中效果类
-    document.getElementById(`theme-item-${localStorage.getItem("theme.color")}`).setAttribute("class", "theme-item enable");
+    const currentEnableElement = document.querySelector(".theme-item.enable");
+    if (currentEnableElement) {
+        currentEnableElement.setAttribute("class", "theme-item");
+    }
+
+    // 处理 !autoSwitch 的显示逻辑
+    let actualSelectedColorId = currentColor;
+    if (currentColor === "!autoSwitch") {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            actualSelectedColorId = config.content.theme.colors.autoSwitch.dark;
+        } else {
+            actualSelectedColorId = config.content.theme.colors.autoSwitch.light;
+        }
+    }
+
+    // 尝试选中实际的 theme-item-xxx 按钮
+    let targetElement = document.getElementById(`theme-item-${currentColor}`); // 仍然尝试选中原始的 localStorage 值（如 !autoSwitch）
+
+    // 如果原始ID的按钮不存在，或者原始ID是!autoSwitch但用户想看实际亮暗模式的选中，可以添加一个额外的逻辑
+    // 例如，如果 !autoSwitch 按钮存在，就选中 !autoSwitch。如果不存在，但 light/dark 按钮存在，且是当前解析出的模式，则选中 light/dark。
+    if (!targetElement && actualSelectedColorId !== currentColor) {
+        targetElement = document.getElementById(`theme-item-${actualSelectedColorId}`);
+    }
+
+
+    if (targetElement) {
+        targetElement.setAttribute("class", "theme-item enable");
+    } else {
+        console.warn("%c[W]%c " + `未找到 ID 为 theme-item-${currentColor} 的主题设置按钮，也未找到 theme-item-${actualSelectedColorId} 按钮，无法设置选中效果。`, "background-color: #e98b2a;", "");
+    }
 }
+
 
 // 创建 ThemeManager 实例
 const themeManager = new ThemeManager();
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 如果第一次访问，将配色方案设置为默认值
-    if (localStorage.getItem("theme.color") === null) {
-        themeManager.setColor(config.content.theme.colors.default);
-    } else {
-        // 否则正常加载主题
-        themeManager.load();
-    }
-
-    /* 根据可用配色方案生成设置按钮 */
-
-    // 获取 .themes 元素
+    // 首先生成并插入主题按钮，确保它们在 DOM 中
     const themesElement = document.querySelector(".primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes");
+    if (!themesElement) {
+        console.error("%c[E]%c " + `未找到 .themes 元素，无法生成主题设置按钮。`, "background-color: #cb1b45;", "");
+        return;
+    }
 
     // 创建一个数组，用来存放生成的按钮 HTML
     const themeButtons = config.content.theme.colors.enable
@@ -273,22 +302,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (key === "!autoSwitch") {
                 console.log("%c[I]%c " + `Website config enabled !autoSwitch`, "background-color: #00896c;", "");
-
-                displayName = config.content.theme.colors.autoSwitch.displayName; // 获取对应的 displayName
-                icon = config.content.theme.colors.autoSwitch.icon.icon; // 获取对应的 icon
-                color = config.content.theme.colors.autoSwitch.icon.color; // 获取对应的 color
-                background = config.content.theme.colors.autoSwitch.icon.background; // 获取对应的 background
+                displayName = config.content.theme.colors.autoSwitch.displayName;
+                icon = config.content.theme.colors.autoSwitch.icon.icon;
+                color = config.content.theme.colors.autoSwitch.icon.color;
+                background = config.content.theme.colors.autoSwitch.icon.background;
             } else {
-                displayName = metaData.colors.list[key].displayName; // 获取对应的 displayName
-                icon = metaData.colors.list[key].icon.icon; // 获取对应的 icon
-                color = metaData.colors.list[key].icon.color; // 获取对应的 color
-                background = metaData.colors.list[key].icon.background; // 获取对应的 background
+                const colorConfig = metaData.colors.list[key];
+                if (colorConfig) {
+                    displayName = colorConfig.displayName;
+                    icon = colorConfig.icon.icon;
+                    color = colorConfig.icon.color;
+                    background = colorConfig.icon.background;
+                } else {
+                    console.error("%c[E]%c " + `配色方案 ${key} 在主题元数据中未找到。请检查 config.content.theme.colors.enable 和 theme.json 的一致性。`, "background-color: #cb1b45;", "");
+                    return "";
+                }
             }
 
             if (displayName && icon && color && background) {
-                // 创建 <div> 标签
+                // 修正：将 @click 替换为 onclick
                 return `
-                <div class="theme-item" id="theme-item-${key}" style="color: ${color}; background: ${background};" @click="themeManager.setColor(\`${key}\`);">
+                <div class="theme-item" id="theme-item-${key}" style="color: ${color}; background: ${background};" onclick="themeManager.setColor(\`${key}\`);">
                     <i class="${icon}"></i>
                     <span>${displayName}</span>
                 </div>
@@ -298,13 +332,20 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return "";
         })
-        .filter(Boolean); // 过滤掉无效的值
+        .filter(Boolean);
 
-    // 将生成的按钮插入到 .social-icons 元素中
+    // 将生成的按钮插入到 .themes 元素中
     themesElement.innerHTML = themeButtons.join("");
 
-    // 加载配色方案设置的选中效果
-    loadThemeSelEff();
-
-    /* 根据可用配色方案生成设置按钮 End */
+    // 接下来，处理主题的加载逻辑
+    if (localStorage.getItem("theme.color") === null) {
+        // 如果第一次访问，将配色方案设置为默认值
+        // 调用 setColor 会触发 load() 和动画，并在动画结束后调用 loadThemeSelEff
+        themeManager.setColor(config.content.theme.colors.default);
+    } else {
+        // 否则正常加载主题
+        themeManager.load();
+        // 因为主题已经加载，所以直接设置选中效果
+        loadThemeSelEff();
+    }
 });
