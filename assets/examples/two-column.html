@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>示例：两列主内容 + 侧边栏 (Grid)</title>
+  <style>
+    body{font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;margin:0;background:#fff;color:#222}
+    .container{display:grid;grid-template-columns:1fr 300px;gap:24px;max-width:1100px;margin:24px auto;padding:0 16px}
+    .main{background:#fafafa;padding:16px;border-radius:8px}
+    .aside{background:#fff;padding:16px;border-radius:8px;border:1px solid #eee}
+    @media (max-width:900px){
+      .container{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <main class="main">
+      <h1>两列布局（主内容 + 侧边栏）</h1>
+      <p>使用 CSS Grid 可以很方便地在大屏上建立定宽侧栏、主内容自适应的两栏布局，并在窄屏下退化为单列。</p>
+      <p>侧栏宽度可用固定值（如 300px）或最小/最大尺寸配合 <code>minmax()</code> 实现更灵活的行为。</p>
+    </main>
+    <aside class="aside">
+      <h3>侧边栏</h3>
+      <p>放置目录、推荐文章或广告位。</p>
+    </aside>
+  </div>
+</body>
+</html>

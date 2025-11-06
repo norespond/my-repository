@@ -3,18 +3,13 @@
 // 获取网站配置
 function getWebsiteConfig() {
     return {
-        content: {},
-        init() {
+        // 使用 autoInitObject() 来创建一个递归代理，访问任何未定义的深层属性时不会抛出错误
+        content: autoInitObject(),
+        async init() {
             try {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", "./config.json", false); // 使用同步请求
-                xhr.send();
-
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    this.content = JSON.parse(xhr.responseText); // 动态更新 config 对象
-                } else {
-                    throw new Error("无法获取网站配置文件");
-                }
+                const res = await fetch("./config.json");
+                if (!res.ok) throw new Error("无法获取网站配置文件");
+                this.content = await res.json();
             } catch (error) {
                 console.error("无法获取网站配置文件: ", error);
             }
@@ -22,9 +17,31 @@ function getWebsiteConfig() {
     };
 }
 
-// 获取网站配置
+// 获取网站配置（不在此处自动 init，调用方应在需要时 await config.init()）
 const config = getWebsiteConfig();
-config.init();
+
+// 如果页面在 head 中提前注入了 window.config 的简略默认值（为了防止 Alpine 在 config 加载前报错），
+// 则尽量保留这些默认值，将它们合并到我们内部的 config.content 中；同时把内部 config 绑定到 window.config，
+// 以确保所有脚本引用的是同一个对象（避免全局命名混淆导致的竞态）。
+try {
+    if (window.config && window.config.content) {
+        // 将提前注入的内容合并到代理对象中（代理会自动创建深层属性）
+        const injected = window.config.content;
+        // 只合并第一层，以保留自动代理行为；深层赋值也会逐步创建属性
+        Object.keys(injected).forEach(key => {
+            try {
+                config.content[key] = injected[key];
+            } catch (e) {
+                console.warn('合并预注入 config.content 时发生错误: ', e);
+            }
+        });
+    }
+} catch (e) {
+    console.warn('检查 window.config 时发生错误: ', e);
+}
+
+// 暴露到全局，确保其他脚本通过 window.config 也能访问到同一实例
+window.config = config;
 
 // 对象递归初始化代理
 function autoInitObject() {
@@ -73,10 +90,8 @@ function debounce(func, delay) {
     };
 }
 
-// 初始化 markdown-it 实例
-const md = new markdownit({
-    html: true, // 允许 HTML 标签
-});
+// 延迟初始化 markdown-it 实例（当 CDN 无法加载时可优雅退化）
+let md;
 
 // Markdown 渲染器
 function renderMarkdown() {
@@ -97,11 +112,29 @@ function renderMarkdown() {
                     return response.text();
                 })
                 .then(markdownContent => {
-                    // 使用 markdown-it 库将 Markdown 转换为 HTML
-                    const renderedHTML = md.render(markdownContent);
+                        // 如果尚未初始化 md，尝试在全局寻找 markdownit 并初始化
+                        if (!md && typeof markdownit !== "undefined") {
+                            try {
+                                md = new markdownit({ html: true });
+                            } catch (e) {
+                                console.error('初始化 markdown-it 失败', e);
+                            }
+                        }
 
-                    // 使用渲染后的 HTML 直接替换原始内容
-                    element.innerHTML = renderedHTML;
+                        if (md) {
+                            // 使用 markdown-it 库将 Markdown 转换为 HTML
+                            const renderedHTML = md.render(markdownContent);
+                            // 使用渲染后的 HTML 直接替换原始内容
+                            element.innerHTML = renderedHTML;
+                        } else {
+                            // markdown-it 不可用：回退为纯文本显示（避免抛错）
+                            const pre = document.createElement('pre');
+                            pre.style.whiteSpace = 'pre-wrap';
+                            pre.textContent = markdownContent;
+                            element.innerHTML = '';
+                            element.appendChild(pre);
+                            console.warn('markdown-it 未加载，已以纯文本回退渲染：', src);
+                        }
                 })
                 .catch(error => {
                     console.error(error);

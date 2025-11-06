@@ -2,6 +2,7 @@
 
 var themePath;
 var metaData;
+var themeManager; // will be instantiated after config is loaded
 
 // 配色方案切换加载动画的最短显示时间
 const minimumColorSwitchTime = 650;
@@ -9,28 +10,21 @@ const colorSwitchSleepTime = 310;
 
 class ThemeManager {
     constructor() {
-        this.parse();
+        // 不在构造函数里同步解析主题，改为显式调用 init()
     }
 
-    // 解析主题
-    parse() {
+    // 异步解析主题并加载 theme.json
+    async parse() {
         // 构建主题目录
         const basePath = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
-        themePath = basePath + "/assets/themes/" + config.content.theme.theme;
+        themePath = basePath + "/assets/themes/" + (config.content?.theme?.theme || "");
 
         console.log("%c[I]%c " + `Theme Path: ${themePath}`, "background-color: #00896c;", "");
 
-        // 使用 XML 获取主题的元数据
         try {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", themePath + "/theme.json", false); // 使用同步请求
-            xhr.send();
-
-            if (xhr.status >= 200 && xhr.status < 300) {
-                metaData = JSON.parse(xhr.responseText);
-            } else {
-                throw new Error("无法获取主题元数据");
-            }
+            const res = await fetch(themePath + "/theme.json");
+            if (!res.ok) throw new Error(`无法获取主题元数据: ${res.status}`);
+            metaData = await res.json();
         } catch (error) {
             console.error("%c[E]%c " + `获取主题元数据失败: ${error}`, "background-color: #cb1b45;", "");
             throw new Error("获取主题元数据失败，无法继续执行操作");
@@ -39,7 +33,7 @@ class ThemeManager {
         console.log("%c[I]%c " + `主题元数据: ${JSON.stringify(metaData)}`, "background-color: #00896c;", "");
 
         // 检查元数据是否合法
-        if (metaData.id && metaData.name && metaData.version && metaData.files.styles && metaData.files.scripts && metaData.colors) {
+        if (metaData.id && metaData.name && metaData.version && metaData.files?.styles && metaData.files?.scripts && metaData.colors) {
             // 输出欢迎语
             console.group("%c主题解析成功！%c" + `${metaData.name} (${metaData.id})`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #00896c; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #986db2; color: #ffffff;");
             console.log("%cID:%c" + `${metaData.id}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
@@ -53,6 +47,11 @@ class ThemeManager {
             console.error("%c[E]%c " + `主题解析失败，元数据存在问题`, "background-color: #cb1b45;", "");
             throw new Error("主题解析失败，无法继续执行操作");
         }
+    }
+
+    // 异步初始化（会调用 parse）
+    async init() {
+        await this.parse();
     }
 
     // 加载主题
@@ -281,10 +280,24 @@ function loadThemeSelEff() {
 }
 
 
-// 创建 ThemeManager 实例
-const themeManager = new ThemeManager();
+// 等待配置加载完成后再创建 ThemeManager 并初始化主题相关 DOM（避免 config 未就绪导致读取 undefined）
+document.addEventListener('config:loaded', async () => {
+    try {
+        themeManager = new ThemeManager();
+    } catch (e) {
+        console.error('%c[E]%c ThemeManager 初始化失败: ' + e, 'background-color: #cb1b45;', '');
+        return;
+    }
 
-document.addEventListener("DOMContentLoaded", () => {
+    // 在继续之前确保 theme 元数据已被异步加载并解析完毕
+    try {
+        await themeManager.init();
+    } catch (e) {
+        console.error('%c[E]%c ThemeManager.init() 失败: ' + e, 'background-color: #cb1b45;', '');
+        return;
+    }
+
+    // 继续原本在 DOMContentLoaded 中执行的逻辑
     // 首先生成并插入主题按钮，确保它们在 DOM 中
     const themesElement = document.querySelector(".primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes");
     if (!themesElement) {

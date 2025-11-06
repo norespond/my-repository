@@ -4,18 +4,60 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loading...</title>
-    <meta name="description" content="Content Info" />
+    <title>秋风的小站</title>
+    <meta name="description" content="秋风的个人小站 — 分享兴趣与笔记。" />
     <link rel="icon" href="./favicon.ico" />
+    <!-- Open Graph / Twitter -->
+    <meta property="og:title" content="秋风的小站" />
+    <meta property="og:description" content="秋风的个人小站 — 分享兴趣与笔记。" />
+    <meta property="og:image" content="./assets/images/avatar.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://norespond.github.io/my-repository/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://norespond.github.io/my-repository/" />
+
+    <!-- Safe default config to avoid runtime errors when scripts/Alpine evaluate before
+         the real config.json is fetched. This creates minimal shape only if window.config
+         or window.config.content is not already defined. It will NOT overwrite a loaded config. -->
+    <script>
+        (function () {
+            window.config = window.config || {};
+            if (!window.config.content) {
+                window.config.content = {
+                    title: document.title || '秋风的小站',
+                    theme: {
+                        displayName: '默认',
+                        theme: '',
+                        colors: {
+                            default: '',
+                            autoSwitch: { dark: '', light: '' },
+                            enable: [],
+                            list: {},
+                            index: []
+                        }
+                    },
+                    masterInfo: {
+                        name: '秋风',
+                        website: '#',
+                        avatar: './assets/images/avatar.png',
+                        socialLink: { enable: [], icon: {}, link: {} }
+                    },
+                    pageHead: { typedContent: [] },
+                    icp: { enable: [], info: { code: {}, link: {} } }
+                };
+            }
+        })();
+    </script>
 
     <link rel="stylesheet" href="./assets/styles/loaders.css" />
     <iframe id="global-loader-iframe" src="./loaders/global.html"></iframe>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- 推荐使用 CDN 方式加载 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.3.2/dist/markdown-it.min.js"></script>
+    <!-- Localized vendor libraries (fallbacks) -->
+    <script defer src="./assets/vendor/sweetalert.min.js"></script>
+    <script defer src="./assets/vendor/typed.min.js"></script>
+    <script defer src="./assets/vendor/markdown-it.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <link rel="stylesheet" href="./assets/styles/elements.css" />
@@ -32,7 +74,7 @@
     <link href="
         https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css
         " rel="stylesheet">
-
+    <script src="./assets/scripts/music.js"></script>
     <theme></theme>
 </head>
 
@@ -45,7 +87,8 @@
         <div class="left-area">
             <div class="cards">
                 <div class="card-item" id="personal-info">
-                    <img class="avatar" :src="config.content.masterInfo.avatar" />
+                    <!-- 使用标准 img，JS 在配置加载后设置 src -->
+                    <img class="avatar" id="avatar-img" alt="秋风的头像" src="./assets/images/avatar.png" />
                     <span class="name" x-text="config.content.masterInfo.name">Loading...</span>
                     <div class="social-icons">Loading...</div>
                 </div>
@@ -61,7 +104,8 @@
                         <a id="hitokoto-text" href="" target="_blank">Loading...</a>
                     </div>
                 </div>
-                <div id="player"></div>
+                <!-- aplayer播放器 -->
+                <div id="aplayer"></div>
                 <div class="card-item" id="settings">
                     <span class="title"><i class="fa-solid fa-sliders"></i>浏览设置</span>
                     <div class="content">
@@ -77,7 +121,9 @@
         <div class="right-area">
             <div class="content-page">
                 <div class="markdown-content" src="./assets/markdown/content-page.md"></div>
-                <div class="markdown-content" src="./assets/markdown/content-page1.md"></div>
+                <div class="markdown-content" src="./assets/markdown/about.md"></div>
+                <div class="markdown-content" src="./assets/markdown/article.md"></div>
+                <div class="markdown-content" src="./assets/markdown/gallery.md"></div>
                 <div class="markdown-content" src="./n3/st.md"></div>
             </div>
         </div>
