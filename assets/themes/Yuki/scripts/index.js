@@ -23,7 +23,7 @@ element.pageHead.addEventListener("click", eventListener.pageHead.click);
 
 // 雪花飘落效果
 (function () {
-const image = ["./assets/themes/yuki/assets/images/page-head/yuki_01.png"];
+const image = ["./assets/themes/Yuki/assets/images/page-head/yuki_01.png"];
     let stop;
     // 随机选择一张图片
     function getRandomImage() {
