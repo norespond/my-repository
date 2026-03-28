@@ -1,0 +1,7 @@
+/* 页首 */
+.page-head {
+    background-color: #28a7ce;
+    background-image: url(../../../assets/images/page-head/wall-noon.png);
+    background-size: cover;
+    background-position: center 45%;
+}

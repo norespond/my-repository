@@ -1,0 +1,40 @@
+:root {
+    --color-base: #f0f8ff;
+    /* 雪地背景，淡冰蓝 */
+    --color-mantle: #e6f0fa;
+    /* 雪层覆盖，柔和蓝白 */
+    --color-crust: #dce6ef;
+    /* 雪地阴影，浅灰蓝 */
+    --color-dent: #f5faff;
+    /* 雪面凹陷，几乎纯白 */
+    --color-text: #4a5a6a;
+    /* 冷调文字，深灰蓝 */
+    --color-text-selection: #cce6ff;
+    /* 选中高亮，冰蓝色 */
+    --color-key: #6a8fbf;
+    /* 关键元素，冰湖蓝 */
+    --color-weak: #aabccc;
+    /* 次要文字，雾灰蓝 */
+    --color-divide: #cdd9e5;
+    /* 分隔线，雪灰色 */
+    --color-outline: #b0cde5;
+    /* 边框线，冰蓝灰 */
+    --color-accent: #89c4f4;
+    /* 强调色，晴空蓝 */
+    --color-accent-fg: #ffffff;
+    /* 强调前景，纯白 */
+    --color-overlay: #eaf3fc;
+    /* 叠加层，淡蓝白 */
+    --color-positive: #a8e0ff;
+    /* 正向提示，冰蓝绿 */
+    --color-positive-fg: #3a5f73;
+    /* 正向文字，深蓝灰 */
+    --color-danger: #f28b8b;
+    /* 错误提示，冷粉红 */
+    --color-danger-fg: #6a3a3a;
+    /* 错误文字，暗红灰 */
+    --color-warning: #ffe0b2;
+    /* 警告提示，柔和米黄 */
+    --color-warning-fg: #7a5a2f;
+    /* 警告文字，棕灰色 */
+}
