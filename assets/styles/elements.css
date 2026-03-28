@@ -108,7 +108,7 @@ a {
 
 .right-area a[target="_blank"]::after {
     content: "\f35d";
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 6 Free";
     position: absolute;
     top: 0;
     right: 0;

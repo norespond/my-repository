@@ -1,7 +1,7 @@
 {
     "title": "秋风的小站",
     "theme": {
-        "theme": "yuki",
+        "theme": "Yuki",
         "displayName": "Yuki",
         "colors": {
             "autoSwitch": {
@@ -25,11 +25,11 @@
     "masterInfo": {
         "name": "秋风",
         "avatar": "./assets/images/avatar.png",
-        "website": " https://norespond.github.io/my-repository/",
+        "website": "https://www.xuehdxz.dpdns.org/",
         "socialLink": {
             "link": {
                 "bilibili": "./n3/404-error-page/src/404.html",
-                "github": "https://norespond.github.io/my-repository/",
+                "github": "https://www.xuehdxz.dpdns.org/",
                 "email": "./n3/404-error-page/src/404.html"
             },
             "icon": {

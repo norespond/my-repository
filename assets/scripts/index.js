@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var element = {
         pageHead: document.querySelector(".page-head"),
         leftArea: document.querySelector(".primary-container > .left-area"),
+        contentPage: document.querySelector(".content-page"),
         socialIcons: document.querySelector(".social-icons"),
         icpInfo: document.querySelector(".icp-info"),
         webmasterInfo: document.querySelector(".webmaster-info"),
@@ -59,12 +60,51 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 渲染 Markdown 内容（renderMarkdown 自身会处理 markdown-it 不可用的情况）
     try {
-        renderMarkdown();
+        await renderMarkdown();
     } catch (e) {
         console.error('渲染 Markdown 出错：', e);
     }
 
     // 加载页首打字标题（仅当 Typed.js 可用时）
+    const homeContentPageHTML = element.contentPage ? element.contentPage.innerHTML : "";
+    let galleryCleanup = null;
+
+    function restoreHomeContent() {
+        if (!element.contentPage) return;
+
+        if (galleryCleanup) {
+            galleryCleanup();
+            galleryCleanup = null;
+        }
+
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        element.contentPage.innerHTML = homeContentPageHTML;
+        element.contentPage.classList.remove("is-gallery-view");
+        document.body.classList.remove("gallery-active");
+    }
+
+    function openGalleryContent() {
+        if (!element.contentPage || typeof window.getGalleryAppMarkup !== "function" || typeof window.mountGalleryApp !== "function") {
+            return;
+        }
+
+        element.contentPage.innerHTML = window.getGalleryAppMarkup();
+        element.contentPage.classList.add("is-gallery-view");
+        document.body.classList.add("gallery-active");
+        galleryCleanup = window.mountGalleryApp(element.contentPage, {
+            onBack: restoreHomeContent,
+        });
+    }
+
+    if (element.contentPage) {
+        element.contentPage.addEventListener("click", (event) => {
+            const trigger = event.target.closest('[data-page-action="open-gallery"]');
+            if (!trigger) return;
+            event.preventDefault();
+            openGalleryContent();
+        });
+    }
+
     if (typeof Typed !== 'undefined') {
         try {
             new Typed(".page-head > .title", {

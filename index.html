@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>秋风的小站</title>
     <meta name="description" content="秋风的个人小站 — 分享兴趣与笔记。" />
-    <link rel="icon" href="./favicon.ico" />
+    <link rel="icon" href="https://norespond.github.io/picx-images-hosting/cover/favicon-.58hq3jeb3k.ico" />
     <!-- Open Graph / Twitter -->
     <meta property="og:title" content="秋风的小站" />
     <meta property="og:description" content="秋风的个人小站 — 分享兴趣与笔记。" />
     <meta property="og:image" content="./assets/images/avatar.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://norespond.github.io/my-repository/" />
+    <meta property="og:url" content="https://www.xuehdxz.dpdns.org/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href="https://norespond.github.io/my-repository/" />
+    <link rel="canonical" href="https://www.xuehdxz.dpdns.org/" />
 
     <!-- Safe default config to avoid runtime errors when scripts/Alpine evaluate before
          the real config.json is fetched. This creates minimal shape only if window.config
@@ -52,28 +52,26 @@
     <link rel="stylesheet" href="./assets/styles/loaders.css" />
     <iframe id="global-loader-iframe" src="./loaders/global.html"></iframe>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <!-- 推荐使用 CDN 方式加载 -->
     <!-- Localized vendor libraries (fallbacks) -->
     <script defer src="./assets/vendor/sweetalert.min.js"></script>
     <script defer src="./assets/vendor/typed.min.js"></script>
     <script defer src="./assets/vendor/markdown-it.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.2/dist/cdn.min.js"></script>
 
     <link rel="stylesheet" href="./assets/styles/elements.css" />
     <link rel="stylesheet" href="./assets/styles/index.css" />
     <link rel="stylesheet" href="./assets/styles/responsive/index.css" />
+    <link rel="stylesheet" href="./image/img.css" />
 
     <script src="./assets/scripts/utils.js"></script>
     <script src="./assets/scripts/theme-loader.js"></script>
+    <script src="./assets/scripts/gallery.js"></script>
     <script src="./assets/scripts/index.js"></script>
 
-    <script src="
-        https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js
-        "></script>
-    <link href="
-        https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css
-        " rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" rel="stylesheet">
     <script src="./assets/scripts/music.js"></script>
     <theme></theme>
 </head>
@@ -122,8 +120,8 @@
             <div class="content-page">
                 <div class="markdown-content" src="./assets/markdown/content-page.md"></div>
                 <div class="markdown-content" src="./assets/markdown/about.md"></div>
-                <div class="markdown-content" src="./assets/markdown/article.md"></div>
-                <div class="markdown-content" src="./assets/markdown/gallery.md"></div>
+                <div class="markdown-content gallery-entry" id="gallery-entry" data-page-action="open-gallery"
+                    src="./assets/markdown/gallery.md"></div>
                 <div class="markdown-content" src="./n3/st.md"></div>
             </div>
         </div>

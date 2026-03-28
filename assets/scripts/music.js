@@ -1,42 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
     const ap = new APlayer({
-        container: document.getElementById('aplayer'),
-        theme: '#FADFA3', // 使用固定的主题色
-        loop: 'one',  // 单曲循环
+        container: document.getElementById("aplayer"),
+        theme: "#FADFA3",
+        loop: "one",
         volume: 0.7,
         fixed: true,
-        audio: []
+        audio: [],
     });
 
-    const repoBaseUrl = "https://norespond.github.io/music-feng/music/";
-
-    fetch("https://norespond.github.io/music-feng/music/song.json")
-        .then(response => response.json())
+    fetch("./assets/song.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
         .then(songsData => {
-            const audioList = songsData.map(song => {
-                // 打印每个歌曲的封面 URL 进行调试
-                console.log("Cover URL:", song.cover);
+            const audioList = songsData
+                .map(song => ({
+                    name: song.title || song.name || "Unknown Title",
+                    artist: song.album || song.artist || "",
+                    cover: song.cover || "./assets/images/avatar.png",
+                    url: song.url || "",
+                }))
+                .filter(song => song.url);
 
-                return {
-                    name: song.name,
-                    artist: song.artist,
-                    cover: song.cover, // 直接使用从 JSON 中获取的封面 URL
-                    url: repoBaseUrl + encodeURIComponent(song.file),
-                };
-            });
-
-            // 将音频列表添加到播放器中
             ap.list.add(audioList);
 
-
-            // 设置默认播放歌曲（例如，默认播放第一首歌）
-            const defaultSongIndex = songsData.findIndex(song => song.file === "つないだ手ぶくろ.mp3");
-            if (defaultSongIndex !== -1) {
-                ap.list.switch(defaultSongIndex);  // 切换到指定歌曲并播放
-                //ap.play();  // 播放当前歌曲
-            } else {
-                console.error("指定的歌曲未找到！");
+            if (audioList.length > 0) {
+                ap.list.switch(0);
             }
         })
-        .catch(error => console.error("加载歌曲信息失败:", error));
+        .catch(error => {
+            console.error("加载 assets/song.json 失败:", error);
+        });
 });

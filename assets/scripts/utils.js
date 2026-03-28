@@ -97,6 +97,7 @@ let md;
 function renderMarkdown() {
     // 获取页面中的所有 .markdown-content 元素
     const markdownElements = document.querySelectorAll(".markdown-content");
+    const tasks = [];
 
     // 遍历每个元素，获取其 src 指定的 Markdown 文件并渲染
     markdownElements.forEach(element => {
@@ -104,7 +105,7 @@ function renderMarkdown() {
 
         if (src) {
             // 使用 fetch 来获取 .md 文件内容
-            fetch(src)
+            const task = fetch(src)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`无法获取 Markdown 文件: ${src}`);
@@ -140,10 +141,13 @@ function renderMarkdown() {
                     console.error(error);
                     element.innerHTML = `<span style='color: red;'>加载 Markdown 文件失败: ${src}</span>`;
                 });
+            tasks.push(task);
         } else {
             element.innerHTML = "<span style='color: red;'>加载 Markdown 文件失败: 未在 src 属性中指定文件路径</span>";
         }
     });
+
+    return Promise.all(tasks);
 }
 
 // 将方法挂载到全局对象 window
