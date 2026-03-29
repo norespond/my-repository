@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 鍔犺浇椤甸鎵撳瓧鏍囬锛堜粎褰?Typed.js 鍙敤鏃讹級
     const homeContentPageHTML = element.contentPage ? element.contentPage.innerHTML : "";
     let galleryCleanup = null;
+    let musicCleanup = null;
 
     function setupHomepageArticles() {
         if (!element.contentPage) return;
@@ -149,10 +150,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             galleryCleanup = null;
         }
 
+        if (musicCleanup) {
+            musicCleanup();
+            musicCleanup = null;
+        }
+
         history.replaceState(null, "", window.location.pathname + window.location.search);
         element.contentPage.innerHTML = homeContentPageHTML;
         element.contentPage.classList.remove("is-gallery-view");
+        element.contentPage.classList.remove("is-music-view");
         document.body.classList.remove("gallery-active");
+        document.body.classList.remove("music-active");
         window.scrollTo(0, 0);
     }
 
@@ -170,11 +178,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.scrollTo(0, 0);
     }
 
+    function openMusicContent() {
+        if (!element.contentPage || typeof window.getMusicAppMarkup !== "function" || typeof window.mountMusicApp !== "function") {
+            return;
+        }
+
+        element.contentPage.innerHTML = window.getMusicAppMarkup();
+        element.contentPage.classList.add("is-music-view");
+        document.body.classList.add("music-active");
+        musicCleanup = window.mountMusicApp(element.contentPage, {
+            onBack: restoreHomeContent,
+        });
+        window.scrollTo(0, 0);
+    }
+
     document.addEventListener("click", event => {
         const trigger = event.target.closest('[data-page-action="open-gallery"]');
-        if (!trigger) return;
+        const musicTrigger = event.target.closest('[data-page-action="open-music"]');
+        if (!trigger && !musicTrigger) return;
         event.preventDefault();
-        openGalleryContent();
+        if (trigger) {
+            openGalleryContent();
+            return;
+        }
+        openMusicContent();
     });
 
     if (typeof Typed !== "undefined") {

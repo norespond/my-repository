@@ -89,9 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!container) {
                 return;
             }
+            const card = container.closest(".card-item");
+            const hidePlayerCard = () => {
+                if (card) {
+                    card.hidden = true;
+                } else {
+                    container.hidden = true;
+                }
+            };
 
             if (audioList.length === 0) {
-                container.hidden = true;
+                hidePlayerCard();
                 return;
             }
 
@@ -108,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ),
             ]).then(([, APlayerCtor, resolvedList]) => {
                 if (!APlayerCtor) {
-                    container.hidden = true;
+                    hidePlayerCard();
                     console.warn("[APlayer] 播放器资源未能加载，已跳过初始化");
                     return;
                 }
@@ -118,7 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     theme: "#FADFA3",
                     loop: "one",
                     volume: 0.7,
-                    fixed: true,
+                    fixed: false,
+                    listFolded: true,
                     audio: [],
                 });
 

@@ -64,10 +64,12 @@
     <link rel="stylesheet" href="./assets/styles/index.css" />
     <link rel="stylesheet" href="./assets/styles/responsive/index.css" />
     <link rel="stylesheet" href="./image/img.css" />
+    <link rel="stylesheet" href="./music/music.css" />
 
     <script src="./assets/scripts/utils.js"></script>
     <script src="./assets/scripts/theme-loader.js"></script>
     <script src="./assets/scripts/gallery.js"></script>
+    <script src="./assets/scripts/music-page.js"></script>
     <script src="./assets/scripts/index.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
@@ -103,15 +105,25 @@
                     </div>
                 </div>
                 <div class="card-item" id="gallery-entry">
-                    <span class="title"><i class="fa-solid fa-images"></i>图集</span>
+                    <span class="title"><i class="fa-solid fa-bookmark"></i>收藏</span>
                     <div class="content gallery-entry-content">
-                        <p class="gallery-entry-note">收藏的一些图片，点一下就能进入。</p>
-                        <button type="button" class="gallery-entry-button" data-page-action="open-gallery">
-                            <span class="gallery-entry-button-icon" aria-hidden="true">
-                                <i class="fa-solid fa-images"></i>
-                            </span>
-                            <span>进入图集</span>
-                        </button>
+                        <p class="gallery-entry-note">图片和歌单都放在这里，点一下就能进入。</p>
+                        <div class="gallery-entry-actions">
+                            <button type="button" class="gallery-entry-button gallery-entry-button--gallery"
+                                data-page-action="open-gallery">
+                                <span class="gallery-entry-button-icon" aria-hidden="true">
+                                    <i class="fa-solid fa-images"></i>
+                                </span>
+                                <span>图集</span>
+                            </button>
+                            <button type="button" class="gallery-entry-button gallery-entry-button--music"
+                                data-page-action="open-music">
+                                <span class="gallery-entry-button-icon" aria-hidden="true">
+                                    <i class="fa-solid fa-music"></i>
+                                </span>
+                                <span>音乐</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <!-- aplayer播放器 -->
@@ -137,7 +149,7 @@
         </div>
     </div>
 
-    <!-- <script src="./live2d/dist/autoload.js"></script> -->
+    <script src="./live2d/dist/autoload.js"></script>
 
     <div class="footer">
         <span class="icp-info">Loading...</span>

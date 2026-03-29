@@ -96,10 +96,17 @@ body[data-theme-color="moon"] .page-head > .typed-cursor {
     color: var(--yuki-text-soft);
 }
 
-.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-button {
-    background: linear-gradient(135deg, rgba(214, 236, 252, 0.94), rgba(189, 219, 244, 0.88));
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button {
     color: var(--yuki-title);
     border-color: var(--yuki-border);
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button--gallery {
+    background: linear-gradient(135deg, rgba(214, 236, 252, 0.94), rgba(189, 219, 244, 0.88));
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button--music {
+    background: linear-gradient(135deg, rgba(252, 233, 211, 0.96), rgba(245, 204, 214, 0.88));
 }
 
 .primary-container > .left-area > .cards > .card-item > .content > .settings-item {
@@ -113,6 +120,36 @@ body[data-theme-color="moon"] .page-head > .typed-cursor {
 
 .primary-container > .left-area > .cards > .card-item#hitokoto > .content a#hitokoto-text {
     color: var(--yuki-link-hover);
+}
+
+.music-title {
+    color: var(--yuki-title);
+}
+
+.music-lead,
+.music-card-meta,
+.music-empty p {
+    color: var(--yuki-text-soft);
+}
+
+.music-card {
+    border-color: var(--yuki-border);
+    box-shadow: var(--yuki-shadow-soft);
+}
+
+.music-card:hover,
+.music-card.is-active {
+    border-color: rgba(58, 134, 198, 0.28);
+}
+
+.music-card-action {
+    background: linear-gradient(135deg, rgba(214, 236, 252, 0.94), rgba(189, 219, 244, 0.88));
+    color: var(--yuki-title);
+}
+
+.music-empty {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: var(--yuki-border);
 }
 
 .footer {

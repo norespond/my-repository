@@ -267,6 +267,62 @@ body.theme-switching .primary-container > .right-area > .content-page {
     transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background-color 0.22s ease;
 }
 
+.primary-container > .left-area > .cards > .card-item#music-player > .content {
+    margin-top: 8px;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer {
+    margin: 0;
+    box-shadow: none;
+    background: transparent;
+    color: inherit;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer *,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-info,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-body,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list {
+    color: inherit;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-body,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-info,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-pic,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-lrc,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list ol,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list ol li {
+    background: transparent;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-info {
+    padding-right: 0;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-controller {
+    padding-right: 0;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-volume-bar-wrap,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list-author,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list-index,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list-title {
+    color: inherit;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-list ol {
+    max-height: 220px;
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer.aplayer-withlist .aplayer-list {
+    border-top: 1px solid rgba(77, 106, 133, 0.12);
+}
+
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-body,
+.primary-container > .left-area > .cards > .card-item#music-player .aplayer .aplayer-info {
+    border-radius: 0;
+}
+
 .primary-container>.left-area>.cards>.card-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 26px 8px rgba(0, 0, 0, 0.08);
@@ -348,56 +404,70 @@ body.theme-switching .primary-container > .right-area > .content-page {
     color: unset;
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content > .gallery-entry-note {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-note {
     margin: 0;
     line-height: 1.7;
     color: #5c6c7b;
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content > .gallery-entry-button {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     width: 100%;
-    min-height: 44px;
+    min-height: 46px;
     padding: 0 14px;
     border: 1px solid rgba(77, 106, 133, 0.12);
     border-radius: 12px;
     box-sizing: border-box;
-    background: linear-gradient(135deg, rgba(214, 236, 252, 0.94), rgba(189, 219, 244, 0.88));
-    color: var(--yuki-title);
+    color: #1f2b38;
     font: inherit;
     font-weight: 700;
+    letter-spacing: 0.01em;
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
     touch-action: manipulation;
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content > .gallery-entry-button:hover {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button:hover {
     transform: translateY(-1px);
     filter: brightness(1.02);
     box-shadow: 0 8px 18px rgba(70, 113, 145, 0.12);
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content > .gallery-entry-button:active {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button:active {
     transform: translateY(0);
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content > .gallery-entry-button:focus-visible {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button:focus-visible {
     outline: 2px solid #2a92d8;
     outline-offset: 3px;
 }
 
-.primary-container>.left-area>.cards>.card-item#gallery-entry > .content > .gallery-entry-button-icon {
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button .gallery-entry-button-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button--gallery {
+    background: linear-gradient(135deg, rgba(214, 236, 252, 0.96), rgba(189, 219, 244, 0.92));
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button--music {
+    background: linear-gradient(135deg, rgba(252, 233, 211, 0.96), rgba(245, 204, 214, 0.92));
 }
 
 /* - 浏览设置 */

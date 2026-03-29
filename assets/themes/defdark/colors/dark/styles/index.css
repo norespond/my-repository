@@ -4,7 +4,7 @@ body {
     color: #ffffff;
 }
 
-/* 内容版块 */
+/* 内容板块 */
 .primary-container > .right-area > .content-page {
     background-color: #282828;
 }
@@ -13,6 +13,7 @@ body {
 .primary-container > .left-area > .cards > .card-item {
     background-color: #282828;
 }
+
 /* - 浏览设置 */
 .primary-container > .left-area > .cards > .card-item > .content > .settings-item {
     background-color: #206fa0;
@@ -30,7 +31,76 @@ body {
 
 /* - 左侧卡片 End */
 
-/* - 页脚 */
+/* - 入口卡片 */
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-note {
+    color: #c7c7c7;
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button {
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button--gallery {
+    background: linear-gradient(135deg, rgba(42, 146, 216, 0.9), rgba(31, 111, 160, 0.95));
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions > .gallery-entry-button--music {
+    background: linear-gradient(135deg, rgba(170, 118, 72, 0.92), rgba(134, 87, 114, 0.96));
+}
+
+/* - 入口卡片 End */
+
+/* - 音乐页 */
+.music-app {
+    color: #f5f5f5;
+}
+
+.music-title {
+    color: #ffffff;
+}
+
+.music-lead,
+.music-card-meta,
+.music-empty p {
+    color: #c7c7c7;
+}
+
+.music-header .primary-button {
+    background-color: #206fa0;
+    color: #ffffff;
+}
+
+.music-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015));
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.music-card:hover,
+.music-card.is-active {
+    border-color: rgba(122, 192, 240, 0.38);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
+}
+
+.music-card-action,
+.music-card-title {
+    color: #ffffff;
+}
+
+.music-app .aplayer {
+    background: transparent;
+    color: #ffffff;
+}
+
+.music-empty {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* - 音乐页 End */
+
+/* - 椤佃剼 */
 .footer {
     background-color: #171717;
 }
@@ -42,4 +112,4 @@ body {
 .footer .icp-link {
     color: #ffffff;
 }
-/* - 页脚 End */
+/* - 椤佃剼 End */

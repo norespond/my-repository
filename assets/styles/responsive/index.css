@@ -69,6 +69,10 @@
         flex-wrap: wrap;
     }
 
+    .primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-actions {
+        grid-template-columns: 1fr;
+    }
+
     .primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes > .theme-item {
         min-width: calc(50% - 4px);
         flex: 1 1 calc(50% - 4px);

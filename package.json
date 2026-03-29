@@ -4,7 +4,7 @@
   "description": "ACG-Home",
   "main": "index.js",
   "scripts": {
-    "check": "node --check assets/scripts/index.js && node --check assets/scripts/gallery.js && node --check assets/scripts/utils.js && node --check assets/scripts/theme-loader.js && node --check assets/scripts/music.js",
+    "check": "node --check assets/scripts/index.js && node --check assets/scripts/gallery.js && node --check assets/scripts/utils.js && node --check assets/scripts/theme-loader.js && node --check assets/scripts/music.js && node --check assets/scripts/music-page.js",
     "lint": "eslint assets/scripts",
     "test": "npm run check && npm run lint"
   },
