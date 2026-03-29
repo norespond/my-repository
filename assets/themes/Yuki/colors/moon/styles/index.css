@@ -1,0 +1,63 @@
+body {
+    color: var(--yuki-text);
+}
+
+.page-head {
+    background-color: #13263d;
+    background-image: url(../../../assets/images/page-head/moon.png);
+    background-size: cover;
+    background-position: center 42%;
+}
+
+.page-head * {
+    transition:
+        margin ease 1s,
+        text-shadow ease 1s;
+}
+
+.page-head.expand {
+    height: 100vh;
+    margin-bottom: 30px;
+}
+
+.page-head.expand > .title,
+.page-head.expand > .typed-cursor {
+    margin-top: calc(100vh * 0.25);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.primary-container > .right-area > .content-page,
+.primary-container > .left-area > .cards > .card-item {
+    background: rgba(18, 29, 44, 0.88);
+    border-color: rgba(120, 160, 198, 0.18);
+    box-shadow: 0 18px 34px rgba(5, 11, 19, 0.34);
+}
+
+.primary-container > .right-area > .content-page::before {
+    opacity: 0.14;
+    background-color: #7ca8ce;
+}
+
+.primary-container > .left-area > .cards > .card-item#personal-info > .social-icons i {
+    background: linear-gradient(135deg, #6f95bd 0%, #4e7394 100%);
+    color: #eef6ff;
+}
+
+.primary-container > .left-area > .cards > .card-item > .content > .settings-item {
+    background: linear-gradient(135deg, rgba(57, 87, 119, 0.46), rgba(41, 62, 87, 0.5));
+    color: var(--yuki-text);
+}
+
+.primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes > .theme-item.enable {
+    box-shadow: 0 0 0 2px rgba(193, 222, 246, 0.42);
+}
+
+.footer {
+    background: rgba(10, 18, 28, 0.96);
+    box-shadow: inset 0 -4px 8px 6px rgba(0, 0, 0, 0.28);
+    color: var(--yuki-text);
+}
+
+.footer .icp-link {
+    color: var(--yuki-link);
+}

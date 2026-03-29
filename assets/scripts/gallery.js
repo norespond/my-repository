@@ -109,6 +109,11 @@ window.mountGalleryApp = function (root, options = {}) {
         return;
     }
 
+    const modalOriginalParent = app.modal.parentNode;
+    if (document.body && app.modal.parentNode !== document.body) {
+        document.body.appendChild(app.modal);
+    }
+
     const state = {
         images: [],
         filtered: [],
@@ -358,16 +363,8 @@ window.mountGalleryApp = function (root, options = {}) {
             img.decoding = "async";
             img.dataset.src = image.src;
 
-            const info = document.createElement("div");
-            info.className = "waterfall-desc";
-            info.innerHTML = `
-                <strong>${escapeHtml(image.title)}</strong>
-                <span>${escapeHtml(image.orientation === "other" ? "other" : image.orientation)}</span>
-            `;
-
             thumb.appendChild(img);
             card.appendChild(thumb);
-            card.appendChild(info);
             fragment.appendChild(card);
 
             if (observer) observer.observe(img);
@@ -441,5 +438,10 @@ window.mountGalleryApp = function (root, options = {}) {
     return function cleanupGalleryApp() {
         cleanup.forEach(fn => fn());
         cleanup.length = 0;
+        if (app.modal && app.modal.parentNode) {
+            app.modal.parentNode.removeChild(app.modal);
+        } else if (modalOriginalParent && app.modal && app.modal.parentNode !== modalOriginalParent) {
+            modalOriginalParent.appendChild(app.modal);
+        }
     };
 };

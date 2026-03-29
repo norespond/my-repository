@@ -1,0 +1,110 @@
+/* 滚动条 */
+body::-webkit-scrollbar {
+    width: 6px;
+}
+
+body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0);
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--yuki-scroll-thumb);
+    border-radius: 6px;
+}
+
+body::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:active {
+    background: var(--yuki-accent-strong);
+    border-radius: 6px;
+}
+
+/* 光标 */
+* {
+    cursor: url("../../../cursor/ayuda.cur"), auto;
+}
+
+p,
+span {
+    cursor: url("../../../cursor/ayuda.cur"), auto;
+}
+
+a {
+    background-color: transparent;
+    cursor: url("../../../cursor/ayuda.cur"), pointer;
+}
+
+/* 选中文本 */
+::selection {
+    text-decoration: underline;
+    text-decoration-color: var(--yuki-accent-strong);
+    background: var(--yuki-selection);
+    color: inherit;
+}
+
+/* 分割线 */
+hr {
+    position: relative;
+    overflow: visible;
+    width: calc(100% - 4px);
+    height: 0;
+    margin: 32px auto;
+    box-sizing: content-box;
+    border: 2px dashed rgba(105, 174, 224, 0.36);
+}
+
+hr::before {
+    content: "\f0c4";
+    font-family: "Font Awesome 6 Free";
+    font-weight: bold;
+    font-size: 20px;
+    position: absolute;
+    top: -10px;
+    left: 5%;
+    z-index: 1;
+    color: var(--yuki-accent);
+    transition: all 1s ease-in-out;
+}
+
+/* 标题 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin: 16px 0 12px 0;
+    font-weight: 700;
+    color: var(--yuki-title);
+}
+
+/* 链接 */
+a {
+    position: relative;
+    color: var(--yuki-link);
+    text-decoration: none;
+    background: linear-gradient(to right, var(--yuki-link), var(--yuki-link)) no-repeat right bottom;
+    background-size: 0 2px;
+    transition: background-size 0.8s, color 0.3s;
+}
+
+.right-area a:hover {
+    color: var(--yuki-link-hover);
+    background-position: left bottom;
+    background-size: 100% 2px;
+}
+
+.right-area a[target="_blank"] {
+    padding-right: 12px;
+}
+
+.right-area a[target="_blank"]::after {
+    content: "\f35d";
+    font-family: "Font Awesome 6 Free";
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 10px;
+    transform: translate(0%, -20%);
+    pointer-events: none;
+}

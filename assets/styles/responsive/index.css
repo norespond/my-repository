@@ -10,6 +10,9 @@
         max-width: unset;
         width: 100%;
         margin-right: 0;
+        position: static;
+        top: auto;
+        align-self: auto;
     }
 
     /* 右侧区域 */

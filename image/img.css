@@ -187,26 +187,33 @@
 }
 
 .waterfall-grid {
-    column-count: 3;
-    column-gap: 16px;
+    column-width: 280px;
+    column-gap: 18px;
+    column-fill: balance;
     width: 100%;
+    margin-top: 4px;
 }
 
 .waterfall-item {
     display: inline-block;
     width: 100%;
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     break-inside: avoid;
+    break-inside: avoid-column;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 18px;
     background: var(--color-base);
-    border: 1px solid rgba(137, 196, 244, 0.14);
+    border: 1px solid rgba(137, 196, 244, 0.12);
     box-shadow: 0 12px 28px rgba(53, 85, 115, 0.08);
     cursor: pointer;
+    transform: translateZ(0);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
 .waterfall-item:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) translateZ(0);
+    border-color: rgba(137, 196, 244, 0.24);
+    box-shadow: 0 18px 34px rgba(53, 85, 115, 0.12);
 }
 
 .gallery-entry {
@@ -220,7 +227,7 @@
 .waterfall-thumb {
     width: 100%;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(137, 196, 244, 0.08));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(137, 196, 244, 0.08));
 }
 
 .waterfall-thumb img {
@@ -228,29 +235,12 @@
     width: 100%;
     height: auto;
     object-fit: cover;
+    transition: transform 0.35s ease, filter 0.35s ease;
 }
 
-.waterfall-desc {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 12px 14px 14px;
-    font-size: 13px;
-    color: var(--color-text);
-}
-
-.waterfall-desc strong {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
-}
-
-.waterfall-desc span {
-    flex-shrink: 0;
-    color: var(--color-weak);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+.waterfall-item:hover .waterfall-thumb img {
+    transform: scale(1.02);
+    filter: saturate(1.02) contrast(1.02);
 }
 
 .lazy-img {
@@ -273,7 +263,31 @@
 .image-modal {
     position: fixed;
     inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
     z-index: 10000;
+}
+
+.image-modal[hidden] {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.content-page .image-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    z-index: 10000 !important;
+}
+
+.content-page .image-modal[hidden] {
+    display: none !important;
+    pointer-events: none !important;
 }
 
 .image-modal-backdrop {
@@ -283,18 +297,29 @@
     backdrop-filter: blur(8px);
 }
 
+.content-page .image-modal-backdrop {
+    position: absolute !important;
+    inset: 0 !important;
+}
+
 .image-modal-panel {
     position: relative;
     z-index: 1;
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
-    width: min(1100px, calc(100vw - 32px));
-    height: min(86vh, 920px);
-    margin: 5vh auto 0;
+    width: min(80vw, 980px);
+    max-width: calc(100vw - 32px);
+    height: min(80vh, 820px);
+    margin: 0;
     padding: 18px;
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
+}
+
+.content-page .image-modal-panel {
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 .image-modal-close {
@@ -311,6 +336,11 @@
     cursor: pointer;
 }
 
+.content-page .image-modal-close {
+    position: absolute !important;
+    z-index: 2 !important;
+}
+
 .image-modal-media {
     display: flex;
     align-items: center;
@@ -318,12 +348,14 @@
     overflow: hidden;
     border-radius: 18px;
     background: linear-gradient(180deg, rgba(137, 196, 244, 0.1), rgba(255, 255, 255, 0.95));
+    min-height: 0;
 }
 
 .image-modal-media img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    display: block;
 }
 
 .image-modal-meta {
@@ -363,7 +395,7 @@
     }
 
     .waterfall-grid {
-        column-count: 2;
+        column-width: 240px;
     }
 }
 
@@ -388,12 +420,14 @@
 
     .image-modal-panel {
         width: calc(100vw - 20px);
+        max-width: calc(100vw - 20px);
         height: calc(100vh - 20px);
-        margin: 10px auto 0;
         padding: 14px;
     }
 
     .waterfall-grid {
         column-count: 1;
+        column-width: auto;
+        column-gap: 0;
     }
 }

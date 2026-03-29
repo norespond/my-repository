@@ -154,20 +154,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .catch(console.error);
 
     // 非移动端下自动悬浮左侧区域
-    if (!mobileMode) {
-        const pageHeadHeight = element.pageHead.clientHeight;
-        const updateFloatPageHeadMargin = debounce(() => {
-            element.leftArea.style.marginTop = window.scrollY - pageHeadHeight + "px";
-        }, 60);
-        document.addEventListener("scroll", () => {
-            if (window.scrollY >= pageHeadHeight) {
-                updateFloatPageHeadMargin();
-            } else {
-                element.leftArea.style.marginTop = "unset";
-            }
-        });
-    }
-
     /* 生成页脚 ICP 备案信息 */
 
     // 创建一个数组，用来存放生成的链接 HTML

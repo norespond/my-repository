@@ -84,8 +84,9 @@ body {
     max-width: 350px;
     width: 30%;
     margin-right: 16px;
-
-    transition: margin-top, ease-in, 0.2s;
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
 }
 
 /* 右侧区域 */

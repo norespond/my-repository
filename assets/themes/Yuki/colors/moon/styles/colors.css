@@ -1,0 +1,20 @@
+:root {
+    --yuki-page-bg: linear-gradient(180deg, #0f1c2c 0%, #14243a 48%, #1a2d47 100%);
+    --yuki-surface: rgba(18, 29, 44, 0.78);
+    --yuki-surface-strong: rgba(17, 28, 42, 0.92);
+    --yuki-surface-soft: rgba(26, 40, 58, 0.68);
+    --yuki-border: rgba(136, 173, 210, 0.18);
+    --yuki-shadow: 0 18px 34px rgba(5, 11, 19, 0.34);
+    --yuki-shadow-soft: 0 8px 24px rgba(5, 11, 19, 0.26);
+    --yuki-text: #d8e5f3;
+    --yuki-text-soft: #9eb6cc;
+    --yuki-title: #f4f8ff;
+    --yuki-link: #8bc0f0;
+    --yuki-link-hover: #c1def6;
+    --yuki-accent: #89b9e4;
+    --yuki-accent-strong: #c0dcf8;
+    --yuki-accent-soft: rgba(137, 185, 228, 0.16);
+    --yuki-selection: rgba(137, 185, 228, 0.22);
+    --yuki-scroll-thumb: #4f7da8;
+    --yuki-page-head-overlay: linear-gradient(180deg, rgba(10, 18, 30, 0.08) 0%, rgba(9, 17, 27, 0.42) 100%);
+}

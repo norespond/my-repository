@@ -1,0 +1,53 @@
+{
+    "id": "Yuki",
+    "name": "Yuki",
+    "version": "1.0.0",
+    "author": "norespond",
+    "repo": "https://github.com/norespond/my-repository",
+    "files": {
+        "styles": [
+            "colors.css",
+            "elements.css",
+            "index.css"
+        ],
+        "scripts": [
+            "reload-fix.js",
+            "index.js"
+        ]
+    },
+    "colors": {
+        "list": {
+            "sun": {
+                "displayName": "Sun",
+                "files": {
+                    "styles": [],
+                    "scripts": []
+                },
+                "icon": {
+                    "icon": "fa-solid fa-sun",
+                    "color": "#f8c46c",
+                    "background": "#f7efd6"
+                }
+            },
+            "moon": {
+                "displayName": "Moon",
+                "files": {
+                    "styles": [
+                        "colors.css",
+                        "index.css"
+                    ],
+                    "scripts": []
+                },
+                "icon": {
+                    "icon": "fa-solid fa-moon",
+                    "color": "#dcecff",
+                    "background": "#16263c"
+                }
+            }
+        },
+        "index": [
+            "sun",
+            "moon"
+        ]
+    }
+}
