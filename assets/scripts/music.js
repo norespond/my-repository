@@ -1,4 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const fallbackCover = "https://norespond.github.io/picx-images-hosting/cover/EV074.4n82bulpg6.jpg";
+
+    function resolveCoverImage(url, song) {
+        return new Promise(resolve => {
+            if (!url) {
+                console.warn("[APlayer] 封面地址为空，已使用备用封面：", song);
+                resolve(fallbackCover);
+                return;
+            }
+
+            const img = new Image();
+            img.onload = function () {
+                resolve(url);
+            };
+            img.onerror = function () {
+                console.warn("[APlayer] 封面加载失败，已切换到备用封面：", {
+                    title: song.name,
+                    artist: song.artist,
+                    cover: song.cover,
+                    url: song.url,
+                    fallbackCover,
+                });
+                resolve(fallbackCover);
+            };
+            img.src = url;
+        });
+    }
+
     const ap = new APlayer({
         container: document.getElementById("aplayer"),
         theme: "#FADFA3",
@@ -25,11 +53,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 }))
                 .filter(song => song.url);
 
-            ap.list.add(audioList);
+            Promise.all(audioList.map(song => resolveCoverImage(song.cover, song).then(cover => ({
+                ...song,
+                cover,
+            })))).then(resolvedList => {
+                ap.list.add(resolvedList);
 
-            if (audioList.length > 0) {
-                ap.list.switch(0);
-            }
+                if (resolvedList.length > 0) {
+                    ap.list.switch(0);
+                }
+            });
         })
         .catch(error => {
             console.error("加载 assets/song.json 失败:", error);
