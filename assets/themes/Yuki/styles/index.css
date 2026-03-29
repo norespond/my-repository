@@ -97,7 +97,7 @@ body {
     width: var(--flake-size);
     height: var(--flake-size);
     transform: translate3d(0, 0, 0);
-    animation: yuki-snow-fall var(--flake-duration) linear var(--flake-delay) infinite;
+    animation: yuki-snow-fall var(--flake-duration) linear var(--flake-delay) 1 forwards;
     will-change: transform, opacity;
     filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
 }
