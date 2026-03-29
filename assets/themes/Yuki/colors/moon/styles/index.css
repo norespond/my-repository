@@ -38,9 +38,35 @@ body {
     background-color: #7ca8ce;
 }
 
+.article-shell {
+    background: rgba(18, 29, 44, 0.9);
+    border: 1px solid rgba(120, 160, 198, 0.18);
+    box-shadow: 0 16px 30px rgba(5, 11, 19, 0.28);
+}
+
+.article-shell-header {
+    background: linear-gradient(135deg, rgba(24, 37, 54, 0.94), rgba(18, 29, 44, 0.94));
+    color: #f4f8ff;
+}
+
+.article-shell-meta {
+    background: rgba(126, 183, 223, 0.18);
+    color: #c7dbef;
+}
+
 .primary-container > .left-area > .cards > .card-item#personal-info > .social-icons i {
     background: linear-gradient(135deg, #6f95bd 0%, #4e7394 100%);
     color: #eef6ff;
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-note {
+    color: var(--yuki-text-soft);
+}
+
+.primary-container > .left-area > .cards > .card-item#gallery-entry > .content > .gallery-entry-button {
+    background: linear-gradient(135deg, rgba(61, 88, 120, 0.62), rgba(40, 58, 84, 0.72));
+    color: #eef6ff;
+    border-color: rgba(126, 183, 223, 0.18);
 }
 
 .primary-container > .left-area > .cards > .card-item > .content > .settings-item {

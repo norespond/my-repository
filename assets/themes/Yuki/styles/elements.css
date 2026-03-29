@@ -20,16 +20,21 @@ body::-webkit-scrollbar-thumb:active {
 
 /* 光标 */
 * {
-    cursor: url("../../../cursor/ayuda.cur"), auto;
+    cursor: auto;
 }
 
 p,
 span {
-    cursor: url("../../../cursor/ayuda.cur"), auto;
+    cursor: text;
 }
 
 a {
     background-color: transparent;
+    cursor: url("../../../cursor/ayuda.cur"), pointer;
+}
+
+button,
+[role="button"] {
     cursor: url("../../../cursor/ayuda.cur"), pointer;
 }
 
@@ -53,16 +58,33 @@ hr {
 }
 
 hr::before {
-    content: "\f0c4";
-    font-family: "Font Awesome 6 Free";
-    font-weight: bold;
-    font-size: 20px;
+    content: "✦";
+    font-size: 18px;
     position: absolute;
     top: -10px;
     left: 5%;
     z-index: 1;
     color: var(--yuki-accent);
     transition: all 1s ease-in-out;
+}
+
+.icon-inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: currentColor;
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+.icon-inline.icon-text {
+    font-size: 0.75em;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
 }
 
 /* 标题 */
@@ -99,12 +121,11 @@ a {
 }
 
 .right-area a[target="_blank"]::after {
-    content: "\f35d";
-    font-family: "Font Awesome 6 Free";
+    content: "↗";
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 10px;
-    transform: translate(0%, -20%);
+    font-size: 0.8em;
+    transform: translate(15%, -20%);
     pointer-events: none;
 }

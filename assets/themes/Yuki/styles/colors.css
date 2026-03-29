@@ -1,20 +1,26 @@
 :root {
-    --yuki-page-bg: linear-gradient(180deg, #f7fbff 0%, #edf5fb 48%, #e5eff8 100%);
-    --yuki-surface: rgba(255, 255, 255, 0.82);
-    --yuki-surface-strong: rgba(255, 255, 255, 0.94);
-    --yuki-surface-soft: rgba(255, 255, 255, 0.68);
-    --yuki-border: rgba(146, 183, 212, 0.26);
-    --yuki-shadow: 0 16px 34px rgba(68, 105, 137, 0.12);
+    --yuki-page-bg: linear-gradient(180deg, #f6fbff 0%, #edf5fb 46%, #e3eef7 100%);
+    --yuki-surface: rgba(255, 255, 255, 0.84);
+    --yuki-surface-strong: rgba(255, 255, 255, 0.95);
+    --yuki-surface-soft: rgba(255, 255, 255, 0.7);
+    --yuki-border: rgba(146, 183, 212, 0.24);
+    --yuki-shadow: 0 16px 34px rgba(68, 105, 137, 0.11);
     --yuki-shadow-soft: 0 8px 24px rgba(68, 105, 137, 0.08);
-    --yuki-text: #33495f;
-    --yuki-text-soft: #64798d;
-    --yuki-title: #23384d;
-    --yuki-link: #2f87c7;
-    --yuki-link-hover: #1f6ea8;
-    --yuki-accent: #69aee0;
-    --yuki-accent-strong: #3a86c6;
-    --yuki-accent-soft: rgba(105, 174, 224, 0.18);
-    --yuki-selection: rgba(105, 174, 224, 0.28);
-    --yuki-scroll-thumb: #8ec2ea;
-    --yuki-page-head-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 60%, rgba(44, 72, 96, 0.18) 100%);
+    --yuki-text: #32475c;
+    --yuki-text-soft: #627689;
+    --yuki-title: #213548;
+    --yuki-link: #2d83c4;
+    --yuki-link-hover: #1f6caa;
+    --yuki-accent: #73b6ea;
+    --yuki-accent-strong: #3f8ad0;
+    --yuki-accent-soft: rgba(115, 182, 234, 0.18);
+    --yuki-selection: rgba(115, 182, 234, 0.28);
+    --yuki-scroll-thumb: #90c5ec;
+    --yuki-page-head-image: url(../assets/images/page-head/sun.png);
+    --yuki-page-head-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 58%, rgba(44, 72, 96, 0.22) 100%);
+}
+
+body[data-theme-color="moon"] {
+    --yuki-page-head-image: url(../assets/images/page-head/moon.png);
+    --yuki-page-head-overlay: linear-gradient(180deg, rgba(227, 236, 244, 0.12) 0%, rgba(255, 255, 255, 0.03) 54%, rgba(23, 32, 44, 0.34) 100%);
 }

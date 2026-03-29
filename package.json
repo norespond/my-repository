@@ -4,7 +4,9 @@
   "description": "ACG-Home",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check": "node --check assets/scripts/index.js && node --check assets/scripts/gallery.js && node --check assets/scripts/utils.js && node --check assets/scripts/theme-loader.js && node --check assets/scripts/music.js",
+    "lint": "eslint assets/scripts",
+    "test": "npm run check && npm run lint"
   },
   "keywords": [
     "website"

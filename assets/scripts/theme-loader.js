@@ -3,6 +3,12 @@
 var themePath;
 var metaData;
 var themeManager; // will be instantiated after config is loaded
+const DEBUG_THEME_LOG = false;
+const debugConsole = DEBUG_THEME_LOG ? console : {
+    log() {},
+    group() {},
+    groupEnd() {},
+};
 
 // 配色方案切换加载动画的最短显示时间
 const minimumColorSwitchTime = 650;
@@ -19,7 +25,7 @@ class ThemeManager {
         const basePath = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
         themePath = basePath + "/assets/themes/" + (config.content?.theme?.theme || "");
 
-        console.log("%c[I]%c " + `Theme Path: ${themePath}`, "background-color: #00896c;", "");
+        debugConsole.log("%c[I]%c " + `Theme Path: ${themePath}`, "background-color: #00896c;", "");
 
         try {
             const res = await fetch(themePath + "/theme.json");
@@ -30,17 +36,17 @@ class ThemeManager {
             throw new Error("获取主题元数据失败，无法继续执行操作");
         }
 
-        console.log("%c[I]%c " + `主题元数据: ${JSON.stringify(metaData)}`, "background-color: #00896c;", "");
+        debugConsole.log("%c[I]%c " + `主题元数据: ${JSON.stringify(metaData)}`, "background-color: #00896c;", "");
 
         // 检查元数据是否合法
         if (metaData.id && metaData.name && metaData.version && metaData.files?.styles && metaData.files?.scripts && metaData.colors) {
             // 输出欢迎语
-            console.group("%c主题解析成功！%c" + `${metaData.name} (${metaData.id})`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #00896c; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #986db2; color: #ffffff;");
-            console.log("%cID:%c" + `${metaData.id}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
-            console.log("%cName:%c" + `${metaData.name}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
-            console.log("%cVersion:%c" + `${metaData.version}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
-            console.log("%cRepo:%c" + `${metaData.repo}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #010101; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #ff9901; color: #ffffff;");
-            console.groupEnd();
+            debugConsole.group("%c主题解析成功！%c" + `${metaData.name} (${metaData.id})`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #00896c; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #986db2; color: #ffffff;");
+            debugConsole.log("%cID:%c" + `${metaData.id}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
+            debugConsole.log("%cName:%c" + `${metaData.name}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
+            debugConsole.log("%cVersion:%c" + `${metaData.version}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #986db2; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #b5495b; color: #ffffff;");
+            debugConsole.log("%cRepo:%c" + `${metaData.repo}`, "padding: 5px; border-radius: 6px 0 0 6px; background-color: #010101; color: #ffffff;", "padding: 5px; border-radius: 0 6px 6px 0; background-color: #ff9901; color: #ffffff;");
+            debugConsole.groupEnd();
 
             return metaData;
         } else {
@@ -72,7 +78,7 @@ class ThemeManager {
 
         let resolvedTargetColor = localStorage.getItem("theme.color");
         if (resolvedTargetColor === "!autoSwitch") {
-            console.log("%c[I]%c " + `当前配色方案为 !autoSwitch 自动切换，用户的浏览器深色模式启用状态为: ${window.matchMedia("(prefers-color-scheme: dark)").matches}`, "background-color: #00896c;", "");
+            debugConsole.log("%c[I]%c " + `当前配色方案为 !autoSwitch 自动切换，用户的浏览器深色模式启用状态为: ${window.matchMedia("(prefers-color-scheme: dark)").matches}`, "background-color: #00896c;", "");
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
                 resolvedTargetColor = config.content.theme.colors.autoSwitch.dark;
             } else {
@@ -91,6 +97,10 @@ class ThemeManager {
             }
         }
 
+        if (document.body) {
+            document.body.dataset.themeColor = resolvedTargetColor;
+        }
+
 
         // 解析配色方案样式 URL 并插入数组
         metaData.colors.index
@@ -101,7 +111,7 @@ class ThemeManager {
                 if (styles && resolvedTargetColor === key) {
                     return styles.map(file => `<link rel="stylesheet" href="${themePath}/colors/${key}/styles/${file}" />`).join("");
                 } else {
-                    console.log("%c[I]%c " + `跳过了生成 ${key} 配色方案样式标签的步骤，因为 key 的值不符合用户设置 (${resolvedTargetColor} != ${key})`, "background-color: #00896c;", "");
+                    debugConsole.log("%c[I]%c " + `跳过了生成 ${key} 配色方案样式标签的步骤，因为 key 的值不符合用户设置 (${resolvedTargetColor} != ${key})`, "background-color: #00896c;", "");
                     return; // 返回空，过滤器会移除
                 }
             })
@@ -110,7 +120,7 @@ class ThemeManager {
                 styleLinks.push(linkTags);
             });
 
-        console.log("%c[I]%c " + `待插入的 Style 外部资源链接: ${styleLinks.join("")}`, "background-color: #00896c;", "");
+        debugConsole.log("%c[I]%c " + `待插入的 Style 外部资源链接: ${styleLinks.join("")}`, "background-color: #00896c;", "");
 
         // 创建一个数组，用来存放生成的 Script 外部资源链接 HTML
         var scriptLinks = []; // 初始化为空数组
@@ -135,7 +145,7 @@ class ThemeManager {
                 if (scripts && resolvedTargetColor === key) {
                     return scripts.map(file => `<script src="${themePath}/colors/${key}/scripts/${file}"></script>`).join("");
                 } else {
-                    console.log("%c[I]%c " + `跳过了生成 ${key} 配色方案脚本标签的步骤，因为 key 的值不符合用户设置 (${resolvedTargetColor} != ${key})`, "background-color: #00896c;", "");
+                    debugConsole.log("%c[I]%c " + `跳过了生成 ${key} 配色方案脚本标签的步骤，因为 key 的值不符合用户设置 (${resolvedTargetColor} != ${key})`, "background-color: #00896c;", "");
                     return; // 返回空，过滤器会移除
                 }
             })
@@ -144,7 +154,7 @@ class ThemeManager {
                 scriptLinks.push(linkTags);
             });
 
-        console.log("%c[I]%c " + `待插入的 Script 外部资源链接: ${scriptLinks.join("")}`, "background-color: #00896c;", "");
+        debugConsole.log("%c[I]%c " + `待插入的 Script 外部资源链接: ${scriptLinks.join("")}`, "background-color: #00896c;", "");
 
         // 拼接 styleLinks 和 scriptLinks
         const resTag = [...styleLinks, ...scriptLinks];
@@ -152,7 +162,7 @@ class ThemeManager {
         // 将生成的外部资源链接插入到 theme 元素中
         document.querySelector("theme").innerHTML = resTag.join("");
 
-        console.log("%c[I]%c " + `准备执行 <theme> 中的所有 Script 脚本`, "background-color: #00896c;", "");
+        debugConsole.log("%c[I]%c " + `准备执行 <theme> 中的所有 Script 脚本`, "background-color: #00896c;", "");
 
         // 执行 <theme> 中的所有 Script 脚本
         this.runScripts();
@@ -182,6 +192,7 @@ class ThemeManager {
             // 隐藏滚动条
             document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`;
             document.body.style.overflow = "hidden";
+            document.body.classList.add("theme-switching");
 
             // 开始播放加载动画
             document.getElementById("theme-color-loader-iframe").className = "start";
@@ -192,13 +203,14 @@ class ThemeManager {
                     try {
                         localStorage.setItem("theme.color", colorId);
                         themeManager.load();
-                        console.log("%c[I]%c " + `配色方案已更改为: ${colorId}`, "background-color: #00896c;", "");
+                        debugConsole.log("%c[I]%c " + `配色方案已更改为: ${colorId}`, "background-color: #00896c;", "");
                     } catch (error) {
                         console.error("%c[E]%c " + `无法将配色方案更改为 ${colorId}: ${error}`, "background-color: #cb1b45;", "");
                         // 动画结束后也要恢复滚动条
                         document.getElementById("theme-color-loader-iframe").className = "end";
                         document.body.style.paddingRight = "unset";
                         document.body.style.overflow = "unset";
+                        document.body.classList.remove("theme-switching");
                         throw new Error("配色方案更改失败: ", error);
                     }
                 } else {
@@ -207,6 +219,7 @@ class ThemeManager {
                     document.getElementById("theme-color-loader-iframe").className = "end";
                     document.body.style.paddingRight = "unset";
                     document.body.style.overflow = "unset";
+                    document.body.classList.remove("theme-switching");
                     throw new Error("配色方案更改失败，未在主题配色方案索引中匹配到传入的值");
                 }
 
@@ -218,6 +231,7 @@ class ThemeManager {
                     document.getElementById("theme-color-loader-iframe").className = "end";
                     document.body.style.paddingRight = "unset";
                     document.body.style.overflow = "unset";
+                    document.body.classList.remove("theme-switching");
                     if (document.querySelector(".themes")) {
                         loadThemeSelEff();
                     }
@@ -281,11 +295,11 @@ function loadThemeSelEff() {
 
 
 // 等待配置加载完成后再创建 ThemeManager 并初始化主题相关 DOM（避免 config 未就绪导致读取 undefined）
-document.addEventListener('config:loaded', async () => {
+document.addEventListener("config:loaded", async () => {
     try {
         themeManager = new ThemeManager();
     } catch (e) {
-        console.error('%c[E]%c ThemeManager 初始化失败: ' + e, 'background-color: #cb1b45;', '');
+        console.error("%c[E]%c ThemeManager 初始化失败: " + e, "background-color: #cb1b45;", "");
         return;
     }
 
@@ -293,7 +307,7 @@ document.addEventListener('config:loaded', async () => {
     try {
         await themeManager.init();
     } catch (e) {
-        console.error('%c[E]%c ThemeManager.init() 失败: ' + e, 'background-color: #cb1b45;', '');
+        console.error("%c[E]%c ThemeManager.init() 失败: " + e, "background-color: #cb1b45;", "");
         return;
     }
 
@@ -314,7 +328,7 @@ document.addEventListener('config:loaded', async () => {
             let background;
 
             if (key === "!autoSwitch") {
-                console.log("%c[I]%c " + `Website config enabled !autoSwitch`, "background-color: #00896c;", "");
+                debugConsole.log("%c[I]%c " + `Website config enabled !autoSwitch`, "background-color: #00896c;", "");
                 displayName = config.content.theme.colors.autoSwitch.displayName;
                 icon = config.content.theme.colors.autoSwitch.icon.icon;
                 color = config.content.theme.colors.autoSwitch.icon.color;
@@ -334,11 +348,12 @@ document.addEventListener('config:loaded', async () => {
 
             if (displayName && icon && color && background) {
                 // 修正：将 @click 替换为 onclick
+                const iconMarkup = typeof window.renderIconMarkup === "function" ? window.renderIconMarkup(icon) : "";
                 return `
-                <div class="theme-item" id="theme-item-${key}" style="color: ${color}; background: ${background};" onclick="themeManager.setColor(\`${key}\`);">
-                    <i class="${icon}"></i>
+                <button type="button" class="theme-item" id="theme-item-${key}" style="color: ${color}; background: ${background};" onclick="themeManager.setColor(\`${key}\`);">
+                    ${iconMarkup}
                     <span>${displayName}</span>
-                </div>
+                </button>
             `;
             } else {
                 console.error("%c[E]%c " + `配色方案 ${key} 的设置按钮生成失败，主题元数据的配色方案信息 (${displayName}, ${icon}, ${color}, ${background}) 不满足条件，元数据可能存在问题`, "background-color: #cb1b45;", "");
@@ -349,6 +364,9 @@ document.addEventListener('config:loaded', async () => {
 
     // 将生成的按钮插入到 .themes 元素中
     themesElement.innerHTML = themeButtons.join("");
+    if (typeof window.hydrateIcons === "function") {
+        window.hydrateIcons(themesElement);
+    }
 
     // 接下来，处理主题的加载逻辑
     if (localStorage.getItem("theme.color") === null) {

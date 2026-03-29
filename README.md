@@ -1,20 +1,19 @@
 # my-repository
 
-一个基于 ACG Home 的个人静态站点模板，部署在 GitHub Pages 上，主要用于展示首页内容、图集、主题切换、公告和音乐播放器。
+一个基于 [ACG Home](https://github.com/ChengCheng0v0/ACG-Home) 的个人静态站点，适合部署到 GitHub Pages。
 
 ## 主要特性
 
-- 静态站点结构，适合直接部署到 GitHub Pages
-- 配置驱动，站点信息主要来自 `config.json`
-- 首页图集已改为单页切换，不再跳转 `img.html`
-- 图集数据从 `assets/img.json` 加载
-- 音乐播放器从 `assets/song.json` 加载
-- 支持主题与配色切换，当前主题为 `assets/themes/Yuki`
-- 内置本地化 vendor 资源，减少对外部 CDN 的依赖
+- 配置驱动，站点内容主要来自 `config.json`
+- 首页支持文章内容展示、主题切换、公告、一言和音乐播放器
+- 图集已经改为站内单页入口，入口现在放在左侧栏的小卡片里
+- 图集数据从 `assets/img.json` 加载，支持搜索、筛选、排序和预览
+- 使用本地化资源和主题资源，减少对外部 CDN 的依赖
+- 当前主题为 `assets/themes/Yuki`，带有偏落雪的视觉风格和夜间配色
 
 ## 快速开始
 
-建议使用本地静态服务器预览，而不是直接双击打开文件。
+建议使用本地静态服务器预览，不要直接双击打开文件。
 
 ```powershell
 python -m http.server 8000
@@ -34,50 +33,50 @@ npx http-server -p 8000
 
 ## 项目结构
 
-- `index.html` - 站点入口，首页和图集切换都在这里完成
+- `index.html` - 站点入口
 - `config.json` - 站点配置
 - `assets/scripts/` - 页面脚本，包括配置加载、主题管理、图集和音乐
 - `assets/styles/` - 全局样式
-- `assets/markdown/` - 首页右侧展示用的 Markdown 内容
+- `assets/markdown/` - 首页正文和说明内容
 - `assets/img.json` - 图集数据源
 - `assets/song.json` - 音乐数据源
 - `assets/themes/` - 主题文件
-- `assets/vendor/` - 本地化第三方库
+- `assets/vendor/` - 本地化第三方资源
 
-## 站点说明
+## 当前页面说明
 
-- 首页右侧的图集入口会在当前页面内切换成图集视图
-- 图集支持搜索、筛选、排序、加载更多和预览
-- 你自定义的 `Yuki` 主题包含雪花效果和偏冷色系的落雪配色
-- 背景图、头像、歌曲封面等资源都使用仓库内的静态文件
+- 左侧栏包含个人信息、一言、图集入口、音乐和主题切换
+- 右侧内容区展示 Markdown 文章
+- 图集点击后会在当前页面切换为独立图集视图，不再跳转到单独页面
+- 夜间主题会自动使用更适合落雪场景的背景和深色卡片样式
 
 ## 配置说明
 
-站点的主要内容可以在 `config.json` 里调整，例如：
+站点的大部分内容都可以在 `config.json` 中调整，例如：
 
-- 站点标题和描述
-- 头像与站长信息
-- 社交链接
+- 网站标题和描述
+- 头像、站长信息和社交链接
 - 页面头部文案
-- 主题开关
+- 主题默认值和可选配色
+- ICP 备案信息
 
-如果你只是想改个人信息，通常先改 `config.json` 就够了。
+如果你只是想修改个人信息，通常先改 `config.json` 就够了。
 
-## 主题与样式
+## 主题说明
 
 - 主题位于 `assets/themes/`
 - 当前使用的主题目录是 `assets/themes/Yuki`
-- 如果要新增主题，可以参考现有主题目录结构
-- Yuki 主题里已经有雪花动画和偏冷色系的落雪配色
+- `Yuki` 主题包含日间和夜间配色，并针对首页、图集和移动端做了适配
+- 如果你要新增主题，可以参考 `assets/themes/Yuki` 的目录结构
 
-## 调试建议
+## 开发提示
 
-- 如果页面空白，先检查 `config.json` 是否能正常加载
-- 如果图集不显示，先确认 `assets/img.json` 路径和内容格式
-- 如果音乐不播放，先确认 `assets/song.json` 中的音频地址是否可访问
-- 站点依赖的静态资源都建议保持仓库内路径一致，避免 GitHub Pages 上出现 404
+- 如果首页内容没有显示，先检查 `config.json` 是否正常加载
+- 如果图集不显示，先确认 `assets/img.json` 的路径和内容格式
+- 如果音乐播放器不工作，先确认 `assets/song.json` 的音频地址是否可访问
+- `node_modules/` 已加入 `.gitignore`，不会被提交到仓库
 
 ## 致谢
 
 - 模板来源：[ACG Home](https://github.com/ChengCheng0v0/ACG-Home)
-- 感谢你自己对主题、图集和首页结构做的持续整理
+- 感谢你对首页、图集和主题风格的持续整理

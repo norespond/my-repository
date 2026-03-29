@@ -9,7 +9,8 @@ function getWebsiteConfig() {
             try {
                 const res = await fetch("./config.json");
                 if (!res.ok) throw new Error("无法获取网站配置文件");
-                this.content = await res.json();
+                this.content = deepMerge(this.content, await res.json());
+                validateWebsiteConfig(this.content);
             } catch (error) {
                 console.error("无法获取网站配置文件: ", error);
             }
@@ -32,12 +33,12 @@ try {
             try {
                 config.content[key] = injected[key];
             } catch (e) {
-                console.warn('合并预注入 config.content 时发生错误: ', e);
+                console.warn("合并预注入 config.content 时发生错误: ", e);
             }
         });
     }
 } catch (e) {
-    console.warn('检查 window.config 时发生错误: ', e);
+    console.warn("检查 window.config 时发生错误: ", e);
 }
 
 // 暴露到全局，确保其他脚本通过 window.config 也能访问到同一实例
@@ -66,6 +67,97 @@ function autoInitObject() {
 
 // 节流函数
 // NOTE: 节流的作用是：无论事件触发频率多高，目标函数都只会在指定时间间隔内执行一次。
+function isPlainObject(value) {
+    return Object.prototype.toString.call(value) === "[object Object]";
+}
+
+function deepMerge(target, source) {
+    if (!isPlainObject(source) && !Array.isArray(source)) {
+        return target;
+    }
+
+    const output = isPlainObject(target) || Array.isArray(target) ? target : {};
+    Object.keys(source).forEach(key => {
+        const value = source[key];
+        if (isPlainObject(value)) {
+            output[key] = deepMerge(output[key], value);
+        } else if (Array.isArray(value)) {
+            output[key] = value.slice();
+        } else {
+            output[key] = value;
+        }
+    });
+    return output;
+}
+
+function validateWebsiteConfig(content) {
+    const errors = [];
+    const addError = message => errors.push(message);
+
+    if (!isPlainObject(content)) {
+        addError("config.content 必须是对象");
+    } else {
+        if (typeof content.title !== "string" || !content.title.trim()) {
+            addError("缺少 title");
+        }
+
+        if (!isPlainObject(content.theme)) {
+            addError("缺少 theme 对象");
+        } else {
+            if (typeof content.theme.theme !== "string" || !content.theme.theme.trim()) {
+                addError("缺少 theme.theme");
+            }
+            if (typeof content.theme.displayName !== "string" || !content.theme.displayName.trim()) {
+                addError("缺少 theme.displayName");
+            }
+            if (!isPlainObject(content.theme.colors)) {
+                addError("缺少 theme.colors");
+            }
+        }
+
+        if (!isPlainObject(content.masterInfo)) {
+            addError("缺少 masterInfo 对象");
+        } else {
+            if (typeof content.masterInfo.name !== "string" || !content.masterInfo.name.trim()) {
+                addError("缺少 masterInfo.name");
+            }
+            if (typeof content.masterInfo.avatar !== "string" || !content.masterInfo.avatar.trim()) {
+                addError("缺少 masterInfo.avatar");
+            }
+            if (typeof content.masterInfo.website !== "string" || !content.masterInfo.website.trim()) {
+                addError("缺少 masterInfo.website");
+            }
+            if (!isPlainObject(content.masterInfo.socialLink)) {
+                addError("缺少 masterInfo.socialLink");
+            } else {
+                if (!Array.isArray(content.masterInfo.socialLink.enable)) {
+                    addError("缺少 masterInfo.socialLink.enable");
+                }
+                if (!isPlainObject(content.masterInfo.socialLink.link)) {
+                    addError("缺少 masterInfo.socialLink.link");
+                }
+                if (!isPlainObject(content.masterInfo.socialLink.icon)) {
+                    addError("缺少 masterInfo.socialLink.icon");
+                }
+            }
+        }
+
+        if (!isPlainObject(content.pageHead) || !Array.isArray(content.pageHead.typedContent)) {
+            addError("缺少 pageHead.typedContent");
+        }
+
+        if (!isPlainObject(content.icp) || !isPlainObject(content.icp.info)) {
+            addError("缺少 icp.info");
+        }
+    }
+
+    if (errors.length > 0) {
+        console.warn("[config] 配置校验提示：", errors);
+    }
+
+    return errors.length === 0;
+}
+
 function throttle(func, interval) {
     let lastTime = 0;
     return function (...args) {
@@ -113,29 +205,29 @@ function renderMarkdown() {
                     return response.text();
                 })
                 .then(markdownContent => {
-                        // 如果尚未初始化 md，尝试在全局寻找 markdownit 并初始化
-                        if (!md && typeof markdownit !== "undefined") {
-                            try {
-                                md = new markdownit({ html: true });
-                            } catch (e) {
-                                console.error('初始化 markdown-it 失败', e);
-                            }
+                    // 如果尚未初始化 md，尝试在全局寻找 markdownit 并初始化
+                    if (!md && typeof markdownit !== "undefined") {
+                        try {
+                            md = new markdownit({ html: true });
+                        } catch (e) {
+                            console.error("初始化 markdown-it 失败", e);
                         }
+                    }
 
-                        if (md) {
-                            // 使用 markdown-it 库将 Markdown 转换为 HTML
-                            const renderedHTML = md.render(markdownContent);
-                            // 使用渲染后的 HTML 直接替换原始内容
-                            element.innerHTML = renderedHTML;
-                        } else {
-                            // markdown-it 不可用：回退为纯文本显示（避免抛错）
-                            const pre = document.createElement('pre');
-                            pre.style.whiteSpace = 'pre-wrap';
-                            pre.textContent = markdownContent;
-                            element.innerHTML = '';
-                            element.appendChild(pre);
-                            console.warn('markdown-it 未加载，已以纯文本回退渲染：', src);
-                        }
+                    if (md) {
+                        // 使用 markdown-it 库将 Markdown 转换为 HTML
+                        const renderedHTML = md.render(markdownContent);
+                        // 使用渲染后的 HTML 直接替换原始内容
+                        element.innerHTML = renderedHTML;
+                    } else {
+                        // markdown-it 不可用：回退为纯文本显示（避免抛错）
+                        const pre = document.createElement("pre");
+                        pre.style.whiteSpace = "pre-wrap";
+                        pre.textContent = markdownContent;
+                        element.innerHTML = "";
+                        element.appendChild(pre);
+                        console.warn("markdown-it 未加载，已以纯文本回退渲染：", src);
+                    }
                 })
                 .catch(error => {
                     console.error(error);

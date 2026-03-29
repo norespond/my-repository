@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh">
 
 <head>
@@ -102,6 +102,18 @@
                         <a id="hitokoto-text" href="" target="_blank">Loading...</a>
                     </div>
                 </div>
+                <div class="card-item" id="gallery-entry">
+                    <span class="title"><i class="fa-solid fa-images"></i>图集</span>
+                    <div class="content gallery-entry-content">
+                        <p class="gallery-entry-note">收藏的一些图片，点一下就能进入。</p>
+                        <button type="button" class="gallery-entry-button" data-page-action="open-gallery">
+                            <span class="gallery-entry-button-icon" aria-hidden="true">
+                                <i class="fa-solid fa-images"></i>
+                            </span>
+                            <span>进入图集</span>
+                        </button>
+                    </div>
+                </div>
                 <!-- aplayer播放器 -->
                 <div id="aplayer"></div>
                 <div class="card-item" id="settings">
@@ -120,14 +132,12 @@
             <div class="content-page">
                 <div class="markdown-content" src="./assets/markdown/content-page.md"></div>
                 <div class="markdown-content" src="./assets/markdown/about.md"></div>
-                <div class="markdown-content gallery-entry" id="gallery-entry" data-page-action="open-gallery"
-                    src="./assets/markdown/gallery.md"></div>
                 <div class="markdown-content" src="./n3/st.md"></div>
             </div>
         </div>
     </div>
 
-    <script src="./live2d/dist/autoload.js"></script>
+    <!-- <script src="./live2d/dist/autoload.js"></script> -->
 
     <div class="footer">
         <span class="icp-info">Loading...</span>

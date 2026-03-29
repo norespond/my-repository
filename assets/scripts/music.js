@@ -1,5 +1,46 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     const fallbackCover = "https://norespond.github.io/picx-images-hosting/cover/EV074.4n82bulpg6.jpg";
+    const aplayerJsUrl = "https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js";
+    const aplayerCssUrl = "https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css";
+
+    function loadStylesheet(href) {
+        return new Promise(resolve => {
+            const existing = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).find(link => link.href === href);
+            if (existing) {
+                resolve(existing);
+                return;
+            }
+
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = href;
+            link.onload = () => resolve(link);
+            link.onerror = () => resolve(null);
+            document.head.appendChild(link);
+        });
+    }
+
+    function loadScript(src) {
+        return new Promise(resolve => {
+            if (window.APlayer) {
+                resolve(window.APlayer);
+                return;
+            }
+
+            const existing = Array.from(document.querySelectorAll("script")).find(script => script.src === src);
+            if (existing && window.APlayer) {
+                resolve(window.APlayer);
+                return;
+            }
+
+            const script = document.createElement("script");
+            script.src = src;
+            script.defer = true;
+            script.onload = () => resolve(window.APlayer || null);
+            script.onerror = () => resolve(null);
+            document.head.appendChild(script);
+        });
+    }
 
     function resolveCoverImage(url, song) {
         return new Promise(resolve => {
@@ -27,15 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const ap = new APlayer({
-        container: document.getElementById("aplayer"),
-        theme: "#FADFA3",
-        loop: "one",
-        volume: 0.7,
-        fixed: true,
-        audio: [],
-    });
-
     fetch("./assets/song.json")
         .then(response => {
             if (!response.ok) {
@@ -53,10 +85,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 }))
                 .filter(song => song.url);
 
-            Promise.all(audioList.map(song => resolveCoverImage(song.cover, song).then(cover => ({
-                ...song,
-                cover,
-            })))).then(resolvedList => {
+            const container = document.getElementById("aplayer");
+            if (!container) {
+                return;
+            }
+
+            if (audioList.length === 0) {
+                container.hidden = true;
+                return;
+            }
+
+            Promise.all([
+                loadStylesheet(aplayerCssUrl),
+                loadScript(aplayerJsUrl),
+                Promise.all(
+                    audioList.map(song =>
+                        resolveCoverImage(song.cover, song).then(cover => ({
+                            ...song,
+                            cover,
+                        }))
+                    )
+                ),
+            ]).then(([, APlayerCtor, resolvedList]) => {
+                if (!APlayerCtor) {
+                    container.hidden = true;
+                    console.warn("[APlayer] 播放器资源未能加载，已跳过初始化");
+                    return;
+                }
+
+                const ap = new APlayerCtor({
+                    container,
+                    theme: "#FADFA3",
+                    loop: "one",
+                    volume: 0.7,
+                    fixed: true,
+                    audio: [],
+                });
+
                 ap.list.add(resolvedList);
 
                 if (resolvedList.length > 0) {

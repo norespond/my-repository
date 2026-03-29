@@ -1,12 +1,20 @@
 window.getGalleryAppMarkup = function () {
+    const icon = name => (typeof window.renderIconMarkup === "function" ? window.renderIconMarkup(name) : "");
     return `
         <section id="image-app" class="image-app" aria-label="图集应用">
             <header class="image-hero">
                 <div class="image-hero-copy">
-                    <p class="eyebrow">Gallery / SPA</p>
+                    <p class="eyebrow">Gallery / Collection</p>
                     <h1 class="image-title">图集</h1>
-                    <p class="image-lead">图片从 <code>assets/img.json</code> 加载，支持搜索、筛选、排序和预览。</p>
+                    <p class="image-lead">
+                        从 <code>assets/img.json</code> 加载。支持搜索、筛选、排序和预览。
+                    </p>
+                    <div class="hero-actions">
+                        <button id="image-reset" class="ghost-button" type="button">重置筛选</button>
+                        <button id="image-back" class="primary-button" type="button">返回首页</button>
+                    </div>
                 </div>
+
                 <div class="image-stats" id="image-stats">
                     <div class="stat-card">
                         <span class="stat-label">总数</span>
@@ -25,11 +33,10 @@ window.getGalleryAppMarkup = function () {
 
             <div class="image-toolbar">
                 <label class="search-box" for="image-search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    ${icon("magnifying-glass")}
                     <input id="image-search" type="search" placeholder="搜索图片名称、文件名或路径" autocomplete="off" />
+                    <button id="image-clear" class="search-clear" type="button" aria-label="清空搜索">清空</button>
                 </label>
-
-                <div class="filter-group" id="image-filters" aria-label="图片筛选"></div>
 
                 <label class="sort-box" for="image-sort">
                     <span>排序</span>
@@ -41,40 +48,27 @@ window.getGalleryAppMarkup = function () {
                 </label>
             </div>
 
+            <div class="filter-group" id="image-filters" aria-label="图片筛选"></div>
+
             <div class="image-status">
                 <div id="image-status-text" class="image-status-text">正在加载图片...</div>
-                <div class="image-status-actions">
-                    <button id="image-reset" class="ghost-button" type="button">重置筛选</button>
-                    <button id="image-back" class="ghost-button" type="button">返回首页</button>
-                </div>
             </div>
 
-            <div id="image-gallery" class="waterfall-grid" aria-live="polite"></div>
-
-            <div class="gallery-footer">
-                <button id="load-more" class="primary-button" type="button">加载更多</button>
-            </div>
+            <div id="image-gallery" class="image-grid" aria-live="polite"></div>
         </section>
 
-        <div id="image-modal" class="image-modal" hidden>
+        <div id="image-modal" class="image-modal" hidden data-state="" tabindex="-1">
             <div class="image-modal-backdrop" data-close="true"></div>
             <div class="image-modal-panel" role="dialog" aria-modal="true" aria-label="图片预览">
                 <button class="image-modal-close" type="button" data-close="true" aria-label="关闭预览">
-                    <i class="fa-solid fa-xmark"></i>
+                    ${icon("xmark")}
                 </button>
                 <div class="image-modal-media">
                     <img id="image-modal-img" alt="" />
                 </div>
-                <div class="image-modal-meta">
-                    <div>
-                        <h2 id="image-modal-title">图片预览</h2>
-                        <p id="image-modal-subtitle"></p>
-                    </div>
-                    <div class="image-modal-actions">
-                        <button id="image-modal-prev" class="ghost-button" type="button">上一张</button>
-                        <button id="image-modal-next" class="ghost-button" type="button">下一张</button>
-                        <a id="image-modal-open" class="primary-button" href="" target="_blank" rel="noopener noreferrer">打开原图</a>
-                    </div>
+                <div class="image-modal-controls" aria-label="鍥剧墖鍒囨崲">
+                    <button id="image-modal-prev" class="ghost-button" type="button">上一张</button>
+                    <button id="image-modal-next" class="ghost-button" type="button">下一张</button>
                 </div>
             </div>
         </div>
@@ -89,15 +83,13 @@ window.mountGalleryApp = function (root, options = {}) {
         statusText: root.querySelector("#image-status-text"),
         filters: root.querySelector("#image-filters"),
         search: root.querySelector("#image-search"),
+        clearSearch: root.querySelector("#image-clear"),
         sort: root.querySelector("#image-sort"),
         reset: root.querySelector("#image-reset"),
         back: root.querySelector("#image-back"),
-        loadMore: root.querySelector("#load-more"),
         modal: root.querySelector("#image-modal"),
+        modalPanel: root.querySelector(".image-modal-panel"),
         modalImg: root.querySelector("#image-modal-img"),
-        modalTitle: root.querySelector("#image-modal-title"),
-        modalSubtitle: root.querySelector("#image-modal-subtitle"),
-        modalOpen: root.querySelector("#image-modal-open"),
         modalPrev: root.querySelector("#image-modal-prev"),
         modalNext: root.querySelector("#image-modal-next"),
         statsTotal: root.querySelector('[data-stat="total"]'),
@@ -117,19 +109,19 @@ window.mountGalleryApp = function (root, options = {}) {
     const state = {
         images: [],
         filtered: [],
-        renderedCount: 0,
-        batchSize: 24,
         activeFilter: "all",
         query: "",
         sort: "source",
         activeIndex: -1,
+        lastFocusEl: null,
     };
+    let modalCloseTimer = null;
 
     const filterMeta = [
-        { id: "all", label: "全部" },
-        { id: "horizontal", label: "横图" },
-        { id: "vertical", label: "竖图" },
-        { id: "other", label: "其他" },
+        { id: "all", label: "全部", icon: "circle-half-stroke" },
+        { id: "horizontal", label: "横图", icon: "sun" },
+        { id: "vertical", label: "竖图", icon: "moon" },
+        { id: "other", label: "其他", icon: "ellipsis" },
     ];
 
     const observer = "IntersectionObserver" in window
@@ -142,7 +134,7 @@ window.mountGalleryApp = function (root, options = {}) {
                 img.classList.remove("lazy-img");
                 observer.unobserve(img);
             });
-        }, { rootMargin: "200px" })
+        }, { rootMargin: "240px" })
         : null;
     const cleanup = [];
 
@@ -161,6 +153,13 @@ window.mountGalleryApp = function (root, options = {}) {
             refresh();
         });
 
+        listen(app.clearSearch, "click", () => {
+            app.search.value = "";
+            state.query = "";
+            refresh();
+            app.search.focus();
+        });
+
         listen(app.sort, "change", () => {
             state.sort = app.sort.value;
             refresh();
@@ -174,12 +173,7 @@ window.mountGalleryApp = function (root, options = {}) {
         });
 
         listen(app.reset, "click", () => {
-            state.activeFilter = "all";
-            state.query = "";
-            state.sort = "source";
-            app.search.value = "";
-            app.sort.value = "source";
-            refresh();
+            resetState();
         });
 
         if (app.back) {
@@ -190,35 +184,36 @@ window.mountGalleryApp = function (root, options = {}) {
             });
         }
 
-        listen(app.loadMore, "click", () => {
-            renderNextBatch();
-        });
-
         listen(app.gallery, "click", event => {
-            const item = event.target.closest(".waterfall-item");
-            if (!item) return;
-            openModal(Number(item.dataset.index));
+            const card = event.target.closest(".gallery-card");
+            if (!card) return;
+            openModal(Number(card.dataset.index));
         });
 
         listen(app.modal, "click", event => {
             if (event.target.dataset.close === "true") {
+                closeModal();
+            } else if (
+                event.target === app.modalPanel ||
+                (event.target.closest(".image-modal-media") && event.target.tagName !== "IMG") ||
+                (event.target.closest(".image-modal-controls") && !event.target.closest("button"))
+            ) {
                 closeModal();
             }
         });
 
         listen(app.modalPrev, "click", () => moveModal(-1));
         listen(app.modalNext, "click", () => moveModal(1));
-
         listen(window, "keydown", event => {
             if (event.key === "Escape") {
                 closeModal();
-                if (typeof options.onBack === "function" && !root.contains(document.activeElement)) {
-                    // no-op, keep gallery open unless user clicks back
-                }
             } else if (event.key === "ArrowLeft" && !app.modal.hidden) {
                 moveModal(-1);
             } else if (event.key === "ArrowRight" && !app.modal.hidden) {
                 moveModal(1);
+            } else if (event.key === "/" && document.activeElement !== app.search) {
+                event.preventDefault();
+                app.search.focus();
             }
         });
 
@@ -293,20 +288,44 @@ window.mountGalleryApp = function (root, options = {}) {
     }
 
     function renderFilters() {
-        app.filters.innerHTML = filterMeta.map(filter => (
-            `<button type="button" class="filter-chip" data-filter="${filter.id}">${filter.label}</button>`
-        )).join("");
+        const counts = state.images.reduce((acc, image) => {
+            acc[image.orientation] = (acc[image.orientation] || 0) + 1;
+            return acc;
+        }, { all: state.images.length, horizontal: 0, vertical: 0, other: 0 });
+
+        app.filters.innerHTML = filterMeta.map(filter => {
+            const count = filter.id === "all" ? counts.all : (counts[filter.id] || 0);
+            const iconMarkup = typeof window.renderIconMarkup === "function" ? window.renderIconMarkup(filter.icon) : "";
+            return `
+                <button type="button" class="filter-chip" data-filter="${filter.id}">
+                    ${iconMarkup}
+                    <span>${filter.label}</span>
+                    <strong>${count}</strong>
+                </button>
+            `;
+        }).join("");
+        if (typeof window.hydrateIcons === "function") {
+            window.hydrateIcons(app.filters);
+        }
     }
 
     function refresh() {
-        if (!app.modal.hidden) closeModal();
+        closeModal(true);
         state.filtered = applyFilters();
-        state.renderedCount = 0;
         state.activeIndex = -1;
-        app.gallery.innerHTML = "";
+        renderFilters();
         updateStats();
         highlightFilters();
-        renderNextBatch();
+        renderGallery();
+    }
+
+    function resetState() {
+        state.activeFilter = "all";
+        state.query = "";
+        state.sort = "source";
+        app.search.value = "";
+        app.sort.value = "source";
+        refresh();
     }
 
     function applyFilters() {
@@ -336,46 +355,64 @@ window.mountGalleryApp = function (root, options = {}) {
         }
     }
 
-    function renderNextBatch() {
-        if (state.renderedCount >= state.filtered.length) {
-            setStatus(state.filtered.length === 0 ? "没有找到匹配的图片。" : "已经到底了。");
-            app.loadMore.disabled = true;
-            app.loadMore.textContent = "没有更多了";
+    function renderGallery() {
+        app.gallery.innerHTML = "";
+
+        if (state.images.length === 0) {
+            app.gallery.innerHTML = `
+                <div class="image-empty">
+                    <strong>暂无图片</strong>
+                    <p>请检查 <code>assets/img.json</code> 是否可用。</p>
+                </div>
+            `;
+            setStatus("暂无图片数据。");
             return;
         }
 
-        const nextImages = state.filtered.slice(state.renderedCount, state.renderedCount + state.batchSize);
+        if (state.filtered.length === 0) {
+            app.gallery.innerHTML = `
+                <div class="image-empty">
+                    <strong>没有找到匹配的图片</strong>
+                    <p>换个关键词，或者先清空筛选条件。</p>
+                    <button type="button" class="ghost-button" data-action="reset-empty">重置筛选</button>
+                </div>
+            `;
+            setStatus("没有找到匹配的图片。");
+            const button = app.gallery.querySelector('[data-action="reset-empty"]');
+            if (button) {
+                listen(button, "click", resetState);
+            }
+            return;
+        }
+
         const fragment = document.createDocumentFragment();
-
-        nextImages.forEach((image, offset) => {
-            const index = state.renderedCount + offset;
-            const card = document.createElement("article");
-            card.className = "waterfall-item";
+        state.filtered.forEach((image, index) => {
+            const card = document.createElement("button");
+            card.type = "button";
+            card.className = `gallery-card gallery-card--${image.orientation}`;
             card.dataset.index = String(index);
+            card.style.setProperty("--item-delay", `${Math.min(index, 20) * 18}ms`);
+            card.setAttribute("aria-label", `预览 ${image.title}`);
 
-            const thumb = document.createElement("div");
-            thumb.className = "waterfall-thumb";
+            card.innerHTML = `
+                <span class="gallery-card-media">
+                    <img class="lazy-img" alt="${escapeHtml(image.title)}" loading="lazy" decoding="async" data-src="${escapeHtml(image.src)}" />
+                </span>
+            `;
 
-            const img = document.createElement("img");
-            img.className = "lazy-img";
-            img.alt = image.title;
-            img.loading = "lazy";
-            img.decoding = "async";
-            img.dataset.src = image.src;
-
-            thumb.appendChild(img);
-            card.appendChild(thumb);
             fragment.appendChild(card);
 
-            if (observer) observer.observe(img);
-            else img.src = image.src;
+            const img = card.querySelector("img");
+            if (observer && img) {
+                observer.observe(img);
+            } else if (img) {
+                img.src = image.src;
+                img.classList.remove("lazy-img");
+            }
         });
 
         app.gallery.appendChild(fragment);
-        state.renderedCount += nextImages.length;
-        app.loadMore.disabled = state.renderedCount >= state.filtered.length;
-        app.loadMore.textContent = state.renderedCount >= state.filtered.length ? "没有更多了" : "加载更多";
-        setStatus(state.renderedCount === 0 ? "没有找到匹配的图片。" : `已显示 ${state.renderedCount} / ${state.filtered.length} 张`);
+        setStatus(`已显示 ${state.filtered.length} 张图片。`);
     }
 
     function setStatus(text) {
@@ -386,26 +423,45 @@ window.mountGalleryApp = function (root, options = {}) {
         const image = state.filtered[index];
         if (!image) return;
 
+        if (app.modal.dataset.state === "open" && state.activeIndex === index) {
+            return;
+        }
+
+        if (modalCloseTimer) {
+            clearTimeout(modalCloseTimer);
+            modalCloseTimer = null;
+        }
+
         state.activeIndex = index;
+        state.lastFocusEl = document.activeElement;
         app.modalImg.src = image.src;
         app.modalImg.alt = image.title;
-        app.modalTitle.textContent = image.title;
-        app.modalSubtitle.textContent = `${image.orientation === "other" ? "其他" : image.orientation} · ${image.folder || "未分类"}`;
-        app.modalOpen.href = image.src;
         app.modal.hidden = false;
+        app.modal.dataset.state = "open";
         document.body.style.overflow = "hidden";
-        window.location.hash = `image=${encodeURIComponent(image.src)}`;
     }
 
-    function closeModal() {
+    function closeModal(skipRestoreFocus = false) {
         if (app.modal.hidden) return;
-        app.modal.hidden = true;
+
+        if (modalCloseTimer) {
+            clearTimeout(modalCloseTimer);
+            modalCloseTimer = null;
+        }
+
+        app.modal.dataset.state = "closing";
         app.modalImg.src = "";
         document.body.style.overflow = "";
-        if (window.location.hash.startsWith("#image=")) {
-            history.replaceState(null, "", window.location.pathname + window.location.search);
-        }
-        state.activeIndex = -1;
+
+        modalCloseTimer = setTimeout(() => {
+            app.modal.hidden = true;
+            app.modal.dataset.state = "";
+            if (state.activeIndex >= 0 && !skipRestoreFocus && state.lastFocusEl && typeof state.lastFocusEl.focus === "function") {
+                state.lastFocusEl.focus();
+            }
+            state.activeIndex = -1;
+            modalCloseTimer = null;
+        }, 180);
     }
 
     function moveModal(step) {
@@ -415,15 +471,7 @@ window.mountGalleryApp = function (root, options = {}) {
     }
 
     function syncHashToModal() {
-        if (!window.location.hash.startsWith("#image=")) {
-            if (!app.modal.hidden) closeModal();
-            return;
-        }
-
-        const encoded = window.location.hash.replace("#image=", "");
-        const src = decodeURIComponent(encoded);
-        const index = state.filtered.findIndex(item => item.src === src);
-        if (index !== -1) openModal(index);
+        if (!app.modal.hidden) closeModal();
     }
 
     function escapeHtml(value) {
@@ -436,6 +484,10 @@ window.mountGalleryApp = function (root, options = {}) {
     }
 
     return function cleanupGalleryApp() {
+        if (modalCloseTimer) {
+            clearTimeout(modalCloseTimer);
+            modalCloseTimer = null;
+        }
         cleanup.forEach(fn => fn());
         cleanup.length = 0;
         if (app.modal && app.modal.parentNode) {

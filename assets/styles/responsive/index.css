@@ -1,8 +1,15 @@
 @media (max-width: 899px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
     /* - 主体容器 */
     .primary-container {
         flex-direction: column;
-        width: 95%;
+        width: min(100%, 100vw);
+        padding: 0 12px;
+        box-sizing: border-box;
     }
 
     /* 左侧区域 */
@@ -24,7 +31,69 @@
 
     /* 内容版块 */
     .primary-container > .right-area > .content-page {
-        padding: 20px 20px 46px 20px;
+        padding: 18px 16px 36px 16px;
+    }
+
+    .article-shell {
+        margin-top: 12px;
+    }
+
+    .article-shell-header {
+        padding: 14px 14px;
+    }
+
+    .article-shell-body {
+        padding: 0 14px 14px;
+    }
+
+    .page-head {
+        height: 240px;
+        background-position: center 70%;
+    }
+
+    .page-head > .title,
+    .page-head > .typed-cursor {
+        margin-top: 118px;
+        font-size: 24px;
+    }
+
+    .primary-container > .left-area > .cards > .card-item {
+        margin-top: 12px;
+    }
+
+    .primary-container > .left-area > .cards > .card-item#personal-info > .name {
+        font-size: 18px;
+    }
+
+    .primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes {
+        flex-wrap: wrap;
+    }
+
+    .primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes > .theme-item {
+        min-width: calc(50% - 4px);
+        flex: 1 1 calc(50% - 4px);
+        min-height: 46px;
+    }
+
+    .primary-container > .left-area > .cards > .card-item > .content > .settings-item > .themes > .theme-item span {
+        white-space: nowrap;
+    }
+
+    .footer {
+        height: auto;
+        padding: 18px 14px 20px;
+        margin-top: 42px;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .footer > span {
+        line-height: 1.55;
+    }
+
+    .primary-container > .left-area > .cards > .card-item#personal-info > .social-icons a {
+        min-width: 44px;
+        min-height: 44px;
     }
 
     /* - Fixes */
