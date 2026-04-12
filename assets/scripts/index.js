@@ -1,19 +1,14 @@
 ﻿/* global config, throttle, debounce, getWebsiteConfig, Typed, swal, renderMarkdown */
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // 鍦ㄧ户缁墠纭繚閰嶇疆宸插紓姝ュ姞杞藉畬鎴?
     if (typeof config.init === "function") {
         await config.init();
     }
-
-    // 閫氱煡鍏朵粬妯″潡閰嶇疆宸插姞杞斤紙渚嬪 theme-loader.js锛?
     try {
         document.dispatchEvent(new Event("config:loaded"));
     } catch (e) {
-        console.warn("鏃犳硶瑙﹀彂 config:loaded 浜嬩欢", e);
+        console.warn("无法触发 config:loaded 事件", e);
     }
-
-    // 鑾峰彇 DOM 鍏冪礌
     var element = {
         pageHead: document.querySelector(".page-head"),
         leftArea: document.querySelector(".primary-container > .left-area"),
@@ -24,14 +19,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         themeDisplayName: document.querySelector(".theme-display-name"),
         webmasterLink: document.querySelector(".webmaster-link"),
     };
-
-    // 鏌ヨ灞忓箷瀹藉害骞惰缃?Flag
     var mobileMode = false;
     if (window.matchMedia("(max-width: 899px)").matches) {
         mobileMode = true;
     }
-
-    // 璁剧疆缃戠珯鏍囬
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const backToTopEl = document.getElementById("back-to-top");
     if (config.content && config.content.title) {
         document.title = config.content.title;
     }
@@ -56,8 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (typeof window.hydrateIcons === "function") {
         window.hydrateIcons(document);
     }
-
-    // 璁剧疆澶村儚锛堝鏋滃瓨鍦ㄩ厤缃級
     const avatarEl = document.getElementById("avatar-img");
     try {
         if (avatarEl && config.content && config.content.masterInfo && config.content.masterInfo.avatar) {
@@ -65,10 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             avatarEl.alt = (config.content.masterInfo.name || "avatar") + " 的头像";
         }
     } catch (e) {
-        console.error("璁剧疆澶村儚澶辫触", e);
+        console.error("设置头像失败", e);
     }
-
-    // 娓叉煋 Markdown 鍐呭锛坮enderMarkdown 鑷韩浼氬鐞?markdown-it 涓嶅彲鐢ㄧ殑鎯呭喌锛?
     try {
         await renderMarkdown();
     } catch (e) {
@@ -76,8 +65,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     setupHomepageArticles();
-
-    // 鍔犺浇椤甸鎵撳瓧鏍囬锛堜粎褰?Typed.js 鍙敤鏃讹級
+    secureBlankLinks(document);
+    setupBackToTop();
     const homeContentPageHTML = element.contentPage ? element.contentPage.innerHTML : "";
     let galleryCleanup = null;
     let musicCleanup = null;
@@ -161,6 +150,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         element.contentPage.classList.remove("is-music-view");
         document.body.classList.remove("gallery-active");
         document.body.classList.remove("music-active");
+        setupHomepageArticles();
+        secureBlankLinks(element.contentPage);
         window.scrollTo(0, 0);
     }
 
@@ -175,6 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         galleryCleanup = window.mountGalleryApp(element.contentPage, {
             onBack: restoreHomeContent,
         });
+        secureBlankLinks(element.contentPage);
         window.scrollTo(0, 0);
     }
 
@@ -189,6 +181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         musicCleanup = window.mountMusicApp(element.contentPage, {
             onBack: restoreHomeContent,
         });
+        secureBlankLinks(element.contentPage);
         window.scrollTo(0, 0);
     }
 
@@ -204,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         openMusicContent();
     });
 
-    if (typeof Typed !== "undefined") {
+    if (!prefersReducedMotion && typeof Typed !== "undefined") {
         try {
             new Typed(".page-head > .title", {
                 strings: (config.content && config.content.pageHead && config.content.pageHead.typedContent) || [],
@@ -219,31 +212,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Typed.js 初始化出错", e);
         }
     } else {
-        console.warn("Typed.js 未加载，跳过打字效果");
+        const fallbackTitle = (config.content && config.content.pageHead && config.content.pageHead.typedContent && config.content.pageHead.typedContent[0]) || config.content.title || document.title;
+        const titleEl = document.querySelector(".page-head > .title");
+        if (titleEl) {
+            titleEl.textContent = fallbackTitle;
+        }
+        if (typeof Typed === "undefined") {
+            console.warn("Typed.js 未加载，跳过打字效果");
+        }
     }
-
-    /* 鐢熸垚绀句氦閾炬帴鍥炬爣 */
-
-    // 鍒涘缓涓€涓暟缁勶紝鐢ㄦ潵瀛樻斁鐢熸垚鐨勯摼鎺?HTML
     const socialIconLinks = (config.content.masterInfo.socialLink.enable || [])
         .map(key => {
-            const icon = config.content.masterInfo.socialLink.icon[key]; // 鑾峰彇瀵瑰簲鐨?icon
-            const link = config.content.masterInfo.socialLink.link[key]; // 鑾峰彇瀵瑰簲鐨?link
+            const icon = config.content.masterInfo.socialLink.icon[key];
+            const link = config.content.masterInfo.socialLink.link[key];
             if (icon && link) {
-                // 鍒涘缓 <a> 鏍囩锛屽閮ㄦ柊绐楀彛鎵撳紑鏃舵坊鍔?rel 灞炴€т互鎻愬崌瀹夊叏鎬?                return `<a href="${link}" target="_blank" rel="noopener noreferrer"><i class="${icon}"></i></a>`;
+                return `<a href="${link}" target="_blank" rel="noopener noreferrer"><i class="${icon}"></i></a>`;
             }
             return "";
         })
-        .filter(Boolean); // 杩囨护鎺夋棤鏁堢殑鍊?
-    // 灏嗙敓鎴愮殑閾炬帴鎻掑叆鍒?.social-icons 鍏冪礌涓紙涓哄閾炬坊鍔?rel 瀹夊叏灞炴€э級
+        .filter(Boolean);
     element.socialIcons.innerHTML = socialIconLinks.join("");
+    secureBlankLinks(element.socialIcons);
     if (typeof window.hydrateIcons === "function") {
         window.hydrateIcons(element.socialIcons);
     }
-
-    /* 鐢熸垚绀句氦閾炬帴鍥炬爣 End */
-
-    // 获取 Hitokoto 一言，失败则回退到本地文案
     const hitokotoEl = document.querySelector("#hitokoto-text");
     const fallbackHitokoto = [
         "把今天过好，明天自然会来。",
@@ -287,31 +279,53 @@ document.addEventListener("DOMContentLoaded", async () => {
                 clearTimeout(hitokotoTimer);
             }
         });
-
-    // 生成页脚 ICP 备案信息
-
-    // 鍒涘缓涓€涓暟缁勶紝鐢ㄦ潵瀛樻斁鐢熸垚鐨勯摼鎺?HTML
     const icpInfoLinks = config.content.icp.enable
         .map(key => {
-            const code = config.content.icp.info.code[key]; // 鑾峰彇瀵瑰簲鐨?code
-            const link = config.content.icp.info.link[key]; // 鑾峰彇瀵瑰簲鐨?link
+            const code = config.content.icp.info.code[key];
+            const link = config.content.icp.info.link[key];
             if (code && link) {
-                // 鍒涘缓 <a> 鏍囩
-                return `<a class="icp-link" href="${link}" target="_blank">${code}</a>`;
+                return `<a class="icp-link" href="${link}" target="_blank" rel="noopener noreferrer">${code}</a>`;
             }
             return "";
         })
-        .filter(Boolean); // 杩囨护鎺夋棤鏁堢殑鍊?
-    // 将生成的链接插入到 .icp-info 元素中
+        .filter(Boolean);
     element.icpInfo.innerHTML = icpInfoLinks.join(` <i class="fa-solid fa-shield"></i> `);
+    secureBlankLinks(element.icpInfo);
     if (typeof window.hydrateIcons === "function") {
         window.hydrateIcons(element.icpInfo);
     }
 
-    /* 鐢熸垚椤佃剼 ICP 澶囨淇℃伅 End */
+    
 
     requestAnimationFrame(() => {
         document.body.classList.add("page-ready");
     });
 
+    function setupBackToTop() {
+        if (!backToTopEl) return;
+
+        const toggleVisibility = throttle(() => {
+            backToTopEl.classList.toggle("is-visible", window.scrollY > 320);
+        }, 120);
+
+        window.addEventListener("scroll", toggleVisibility, { passive: true });
+        toggleVisibility();
+
+        backToTopEl.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        });
+    }
+
+    function secureBlankLinks(root) {
+        if (!root || typeof root.querySelectorAll !== "function") return;
+
+        root.querySelectorAll('a[target="_blank"]').forEach(link => {
+            const rel = (link.getAttribute("rel") || "").split(/\s+/).filter(Boolean);
+            if (!rel.includes("noopener")) rel.push("noopener");
+            if (!rel.includes("noreferrer")) rel.push("noreferrer");
+            link.setAttribute("rel", rel.join(" "));
+        });
+    }
+
 });
+

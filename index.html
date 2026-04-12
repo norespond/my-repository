@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>秋风的小站</title>
     <meta name="description" content="秋风的个人小站 — 分享兴趣与笔记。" />
+    <meta name="theme-color" content="#49b1f5" />
     <link rel="icon" href="https://norespond.github.io/picx-images-hosting/cover/favicon-.58hq3jeb3k.ico" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <!-- Open Graph / Twitter -->
     <meta property="og:title" content="秋风的小站" />
     <meta property="og:description" content="秋风的个人小站 — 分享兴趣与笔记。" />
@@ -66,29 +69,31 @@
     <link rel="stylesheet" href="./image/img.css" />
     <link rel="stylesheet" href="./music/music.css" />
 
-    <script src="./assets/scripts/utils.js"></script>
-    <script src="./assets/scripts/theme-loader.js"></script>
-    <script src="./assets/scripts/gallery.js"></script>
-    <script src="./assets/scripts/music-page.js"></script>
-    <script src="./assets/scripts/index.js"></script>
+    <script defer src="./assets/scripts/utils.js"></script>
+    <script defer src="./assets/scripts/theme-loader.js"></script>
+    <script defer src="./assets/scripts/gallery.js"></script>
+    <script defer src="./assets/scripts/music-page.js"></script>
+    <script defer src="./assets/scripts/index.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" rel="stylesheet">
-    <script src="./assets/scripts/music.js"></script>
+    <script defer src="./assets/scripts/music.js"></script>
     <theme></theme>
 </head>
 
 <body x-data="">
+    <a class="skip-link" href="#main-content">跳转到主要内容</a>
     <div class="page-head">
         <span class="title"></span>
     </div>
 
-    <div class="primary-container">
+    <main id="main-content" class="primary-container" tabindex="-1">
         <div class="left-area">
             <div class="cards">
                 <div class="card-item" id="personal-info">
                     <!-- 使用标准 img，JS 在配置加载后设置 src -->
-                    <img class="avatar" id="avatar-img" alt="秋风的头像" src="./assets/images/avatar.png" />
+                    <img class="avatar" id="avatar-img" alt="秋风的头像" src="./assets/images/avatar.png" loading="lazy"
+                        decoding="async" />
                     <span class="name" x-text="config.content.masterInfo.name">Loading...</span>
                     <div class="social-icons">Loading...</div>
                 </div>
@@ -144,12 +149,13 @@
             <div class="content-page">
                 <div class="markdown-content" src="./assets/markdown/content-page.md"></div>
                 <div class="markdown-content" src="./assets/markdown/about.md"></div>
+                <div class="markdown-content" src="./assets/markdown/vpns.md"></div>
                 <div class="markdown-content" src="./n3/st.md"></div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script src="./live2d/dist/autoload.js"></script>
+    <script defer src="./live2d/dist/autoload.js"></script>
 
     <div class="footer">
         <span class="icp-info">Loading...</span>
@@ -157,34 +163,52 @@
         <!-- 球球你别改这里可以嘛呜呜呜 (＞﹏＜) -->
         <!-- “[Loading...]”的实际内容可以在 config.json 的 masterInfo.info 项中修改哦~ -->
         <span>本站由 <span class="webmaster-info"><a :href="config.content.masterInfo.website" target="_blank"
-                    x-text="config.content.masterInfo.name">[Loading...]</a> 和 </span><a href="https://hic.top"
-                target="_blank">成成0v0</a> 用 <i class="fa-solid fa-heart"></i> 制作</span>
+                    rel="noopener noreferrer" x-text="config.content.masterInfo.name">[Loading...]</a> 和 </span><a href="https://hic.top"
+                target="_blank" rel="noopener noreferrer">成成0v0</a> 用 <i class="fa-solid fa-heart"></i> 制作</span>
 
-        <span>Powered by <a href="https://github.com/ChengCheng0v0/ACG-Home" target="_blank">ACG-Home</a></span>
+        <span>Powered by <a href="https://github.com/ChengCheng0v0/ACG-Home" target="_blank"
+                rel="noopener noreferrer">ACG-Home</a></span>
     </div>
+    <button type="button" class="back-to-top" id="back-to-top" aria-label="返回顶部">
+        <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
     <iframe id="theme-color-loader-iframe" src="./loaders/theme-color.html"></iframe>
 
     <script>
-        // 隐藏滚动条
-        document.body.style.overflow = "hidden";
+        (function () {
+            // 隐藏滚动条
+            document.body.style.overflow = "hidden";
 
-        // 加载动画的最短显示时间
-        const minimumLoadingTime = 1800;
-        const startTime = new Date().getTime();
+            // 最少展示多久，避免闪一下就消失
+            const minimumLoadingTime = 1800;
+            // 最长等待多久，防止 CDN/外链卡住后页面一直停在 loading
+            const maximumLoadingTime = 8000;
+            const startTime = performance.now();
+            let loaderFinished = false;
 
-        // 页面加载完成后计算是否满足最短时间
-        window.addEventListener("load", function () {
-            const currentTime = new Date().getTime();
-            const elapsedTime = currentTime - startTime;
+            function finishLoader() {
+                if (loaderFinished) return;
+                loaderFinished = true;
 
-            // 如果页面加载时间少于最短显示时间则延迟隐藏加载动画
-            const delay = Math.max(0, minimumLoadingTime - elapsedTime);
-            setTimeout(() => {
-                // document.querySelector(".content").style.display = "block"; //显示网站内容
-                document.getElementById("global-loader-iframe").className = "end"; // 播放结束动画
-                document.body.style.overflow = "unset"; // 恢复显示滚动条
-            }, delay);
-        });
+                const loader = document.getElementById("global-loader-iframe");
+                if (loader) {
+                    loader.className = "end";
+                }
+                document.body.style.overflow = "unset";
+            }
+
+            function finishWhenReady() {
+                const elapsedTime = performance.now() - startTime;
+                const delay = Math.max(0, minimumLoadingTime - elapsedTime);
+                window.setTimeout(finishLoader, delay);
+            }
+
+            // 页面加载完成后，按最短时间退场
+            window.addEventListener("load", finishWhenReady, { once: true });
+
+            // 兜底：如果某个外链一直不返回，至少别把页面锁死在加载页
+            window.setTimeout(finishLoader, maximumLoadingTime);
+        })();
     </script>
 </body>
 

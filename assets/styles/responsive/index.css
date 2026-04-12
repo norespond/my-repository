@@ -1,4 +1,4 @@
-@media (max-width: 899px) {
+﻿@media (max-width: 899px) {
     html,
     body {
         overflow-x: hidden;
@@ -95,6 +95,13 @@
         line-height: 1.55;
     }
 
+    .back-to-top {
+        right: 14px;
+        bottom: 16px;
+        width: 42px;
+        height: 42px;
+    }
+
     .primary-container > .left-area > .cards > .card-item#personal-info > .social-icons a {
         min-width: 44px;
         min-height: 44px;
@@ -112,3 +119,4 @@
 
 @media (min-width: 1440px) {
 }
+
