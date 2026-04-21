@@ -64,72 +64,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("渲染 Markdown 出错", e);
     }
 
-    setupHomepageArticles();
     secureBlankLinks(document);
     setupBackToTop();
     const homeContentPageHTML = element.contentPage ? element.contentPage.innerHTML : "";
     let galleryCleanup = null;
     let musicCleanup = null;
-
-    function setupHomepageArticles() {
-        if (!element.contentPage) return;
-
-        const articles = Array.from(element.contentPage.querySelectorAll(".markdown-content:not(.gallery-entry)"));
-        articles.forEach(article => {
-            if (article.closest(".article-shell")) return;
-
-            const parent = article.parentNode;
-            if (!parent) return;
-
-            const shell = document.createElement("details");
-            shell.className = "article-shell";
-
-            const header = document.createElement("summary");
-            header.className = "article-shell-header";
-
-            const title = document.createElement("span");
-            title.className = "article-shell-title";
-            title.textContent = getArticleTitle(article);
-
-            const meta = document.createElement("span");
-            meta.className = "article-shell-meta";
-            meta.textContent = "展开";
-
-            const headerContent = document.createElement("span");
-            headerContent.className = "article-shell-header-content";
-            headerContent.append(title);
-
-            header.append(headerContent, meta);
-
-            const body = document.createElement("div");
-            body.className = "article-shell-body";
-
-            parent.insertBefore(shell, article);
-            body.appendChild(article);
-            shell.append(header, body);
-
-            shell.open = false;
-            meta.textContent = "展开";
-
-            shell.addEventListener("toggle", () => {
-                const expanded = shell.open;
-                meta.textContent = expanded ? "收起" : "展开";
-            });
-        });
-    }
-
-    function getArticleTitle(article) {
-        const heading = article.querySelector("h1, h2, h3, h4");
-        if (heading && heading.textContent.trim()) {
-            return heading.textContent.trim();
-        }
-
-        const src = article.getAttribute("src") || "";
-        if (src.includes("content-page.md")) return "网站介绍";
-        if (src.includes("about.md")) return "关于本站";
-        if (src.includes("st.md")) return "文章";
-        return "文章";
-    }
 
     function restoreHomeContent() {
         if (!element.contentPage) return;
@@ -150,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         element.contentPage.classList.remove("is-music-view");
         document.body.classList.remove("gallery-active");
         document.body.classList.remove("music-active");
-        setupHomepageArticles();
+
         secureBlankLinks(element.contentPage);
         window.scrollTo(0, 0);
     }
@@ -294,8 +233,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (typeof window.hydrateIcons === "function") {
         window.hydrateIcons(element.icpInfo);
     }
-
-    
 
     requestAnimationFrame(() => {
         document.body.classList.add("page-ready");
