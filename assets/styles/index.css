@@ -596,7 +596,19 @@ body.theme-switching .primary-container > .right-area > .content-page {
 /* - 浏览设置 End */
 
 /* - 左侧卡片 End */
+.markdown-content {
+    margin: 16px 0;
+    padding: 16px 18px;
+    border: 1px solid rgba(77, 106, 133, 0.16);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9);
+}
 
+body[data-theme-color="moon"] .markdown-content,
+body[data-theme-color="dark"] .markdown-content {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.035);
+}
 /* - 页脚 */
 .footer {
     display: flex;
