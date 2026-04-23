@@ -138,7 +138,9 @@ window.mountMusicApp = function (root, options = {}) {
             card.setAttribute("aria-label", `播放 ${track.title}`);
 
             if (state.activeId === track.id) {
-                card.classList.add("is-active");
+                if (card.classList) {
+                    card.classList.add("is-active");
+                }
             }
 
             card.innerHTML = `

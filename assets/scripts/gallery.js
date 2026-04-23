@@ -129,6 +129,7 @@ window.mountGalleryApp = function (root, options = {}) {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
                 const img = entry.target;
+                if (!img || !img.classList) return;
                 const src = img.dataset.src;
                 if (src && !img.src) img.src = src;
                 img.classList.remove("lazy-img");
@@ -407,7 +408,9 @@ window.mountGalleryApp = function (root, options = {}) {
                 observer.observe(img);
             } else if (img) {
                 img.src = image.src;
-                img.classList.remove("lazy-img");
+                if (img.classList) {
+                    img.classList.remove("lazy-img");
+                }
             }
         });
 
@@ -487,6 +490,9 @@ window.mountGalleryApp = function (root, options = {}) {
         if (modalCloseTimer) {
             clearTimeout(modalCloseTimer);
             modalCloseTimer = null;
+        }
+        if (observer && typeof observer.disconnect === "function") {
+            observer.disconnect();
         }
         cleanup.forEach(fn => fn());
         cleanup.length = 0;
