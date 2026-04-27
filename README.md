@@ -1,26 +1,24 @@
 # my-repository
 
-一个基于 [ACG Home](https://github.com/ChengCheng0v0/ACG-Home) 的个人静态站点，适合部署到 GitHub Pages。
+一个基于 [ACG Home](https://github.com/ChengCheng0v0/ACG-Home) 改造的个人静态站点，适合部署到 GitHub Pages 或任意静态托管服务。
 
 ## 主要特性
 
-- 配置驱动，站点内容主要来自 `config.json`
-- 首页支持文章展示、主题切换、公告、一言，以及图集和音乐入口
-- 图集和音乐都已经做成独立页面，入口拆成了两个小卡片
-- 图集数据从 `assets/img.json` 加载，支持搜索、筛选、排序和预览
-- 音乐数据从 `assets/song.json` 加载，使用 APlayer 播放器并以封面卡片形式展示
-- 使用本地化资源和主题资源，尽量减少对外部 CDN 的依赖
-- 当前主题为 `assets/themes/Yuki`，带有偏落雪的视觉风格和夜间配色
+- 配置驱动：站点标题、个人信息、主题和社交链接主要来自 `config.json`
+- 单页切换：首页正文、图集页、音乐页都在当前站点内切换展示
+- 本地资源优先：常用脚本、样式和 Markdown 内容都已放在仓库内
+- 主题扩展友好：主题资源集中放在 `assets/themes/`
+- 保留归档区：历史占位页和实验内容统一收纳到 `archive/`
 
 ## 快速开始
 
-建议使用本地静态服务器预览，不要直接双击打开文件。
+建议使用本地静态服务器预览，不要直接双击打开 `index.html`。
 
 ```powershell
 python -m http.server 8000
 ```
 
-然后访问：
+访问：
 
 ```text
 http://localhost:8000
@@ -32,50 +30,66 @@ http://localhost:8000
 npx http-server -p 8000
 ```
 
-## 项目结构
+## 目录结构
 
-- `index.html` - 站点入口
-- `config.json` - 站点配置
-- `assets/scripts/` - 页面脚本，包含配置加载、主题管理、图集和音乐逻辑
-- `assets/styles/` - 全局样式
-- `assets/markdown/` - 首页正文和说明内容
-- `assets/img.json` - 图集数据源
-- `assets/song.json` - 音乐数据源
-- `assets/themes/` - 主题文件
-- `assets/vendor/` - 本地化第三方资源
-- `music/music.css` - 音乐页样式
+```text
+.
+├─ index.html                 # 站点入口
+├─ config.json                # 站点配置
+├─ assets/
+│  ├─ images/                 # 头像、背景图等图片资源
+│  ├─ markdown/               # 首页正文、公告、说明页 Markdown
+│  ├─ scripts/                # 页面逻辑脚本
+│  ├─ styles/                 # 全局样式与分页样式
+│  │  ├─ pages/               # 图集页、音乐页专用样式
+│  │  └─ responsive/          # 响应式样式
+│  ├─ loaders/                # 加载页与主题色辅助模板
+│  ├─ themes/                 # 主题资源
+│  ├─ vendor/                 # 本地第三方库
+│  ├─ img.json                # 图集数据源
+│  └─ song.json               # 音乐数据源
+├─ archive/
+│  ├─ placeholder-pages/      # 占位页、未完成页、历史页面
+│  └─ README.md               # 归档说明
+├─ live2d/                    # Live2D 挂件源码与构建产物
+└─ package.json               # 校验和 lint 脚本
+```
 
-## 当前页面说明
+## 关键文件说明
 
-- 左侧栏包含个人信息、公告、一言、图集入口、音乐入口和主题切换
-- 右侧内容区展示 Markdown 文章
-- 点击图集或音乐入口后，都会在当前页面切换到对应的独立视图
-- 夜间主题会自动使用更适合当前场景的背景和深色卡片样式
+- `index.html`：页面骨架与资源入口，负责挂载主站内容
+- `config.json`：站点名称、头像、社交链接、主题默认项等核心配置
+- `assets/scripts/`：首页、图集、音乐页、Markdown 渲染和主题切换逻辑
+- `assets/styles/`：站点公共样式；`assets/styles/pages/` 用于独立内容页样式
+- `assets/loaders/`：加载动画和主题色同步用的 iframe 模板
+- `assets/markdown/unfinished.md`：站内“尚未完成之地”的入口文案
+- `archive/placeholder-pages/404-error-page/`：当前未完成链接使用的占位页
 
-## 配置说明
+## 当前页面组织方式
 
-- 站点的大部分内容都可以在 `config.json` 中调整，例如：
-- 网站标题和描述
-- 头像、站长信息和社交链接
-- 页面头部文案
-- 主题默认值和可选配色
-- ICP 备案信息
+- 左侧栏显示个人信息、公告、一言、图集入口、音乐入口和配色切换
+- 右侧内容区默认展示 Markdown 内容
+- 点击图集或音乐入口后，会切换到对应的独立视图
+- Live2D 挂件通过 `live2d/dist/autoload.js` 在页面底部加载
 
-如果你只是想修改个人信息，通常先改 `config.json` 就够了。
+## 维护建议
 
-## 主题说明
+- 修改站点信息时，优先更新 `config.json`
+- 修改正文内容时，直接编辑 `assets/markdown/`
+- 新增图集或音乐数据时，分别维护 `assets/img.json` 和 `assets/song.json`
+- 新增主题时，参考 `assets/themes/Yuki/` 的目录结构
+- 临时页面、占位页、废弃方案建议统一放入 `archive/`
 
-- 主题位于 `assets/themes/`
-- 当前使用的主题目录是 `assets/themes/Yuki`
-- `Yuki` 主题包含日间和夜间配色，并针对首页、图集、音乐和移动端做了适配
-- 如果你要新增主题，可以参考 `assets/themes/Yuki` 的目录结构
+## 开发命令
 
-## 开发提示
+```powershell
+npm test
+```
 
-- 如果首页内容没有显示，先检查 `config.json` 是否正常加载
-- 如果图集不显示，先确认 `assets/img.json` 的路径和内容格式
-- 如果音乐播放有问题，先确认 `assets/song.json` 的音频地址是否可访问
-- `node_modules/` 已加入 `.gitignore`，不会被提交到仓库
+这个命令会执行：
+
+- `node --check`：检查 `assets/scripts/` 下脚本的语法
+- `eslint assets/scripts`：检查脚本风格与潜在问题
 
 ## 致谢
 

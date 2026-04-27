@@ -79,3 +79,7 @@
 路径匹配: 服务端 JSON 里的 path 必须与客户端 YAML 里的 path 严格一致（例如：/path）。
 
 健康检查与 Pending: 容器启动初期显示 Pending 是正常的，因为 V2Ray 在没有合法 WS 请求时可能不会返回 200 OK，导致平台健康检查判定较慢。
+
+## 备注
+
+claw cloud run 即将停止服务
