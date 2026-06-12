@@ -1,0 +1,113 @@
+
+> mizuki@9.0 predev D:\CloudMusic\edenge\test\Mizuki
+> node scripts/sync-content.js || true
+
+已加载 .env 配置文件
+
+开始同步内容...
+
+内容目录不存在：D:\CloudMusic\edenge\test\Mizuki\content
+将使用独立仓库模式
+提示：请设置 CONTENT_REPO_URL 环境变量，或手动创建内容目录
+
+> mizuki@9.0 dev D:\CloudMusic\edenge\test\Mizuki
+> astro dev "--" "--host" "127.0.0.1" "--port" "4321"
+
+[vite] connected.
+[2m22:29:18[22m [34m[types][39m Generated [2m2ms[22m
+[vite] connected.
+[2m22:29:19[22m [34m[content][39m Syncing content
+[2m22:29:19[22m [34m[content][39m Synced content
+[2m22:29:19[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[42m[1m astro [22m[49m [32mv6.0.4[39m [2mready in[22m 6779 [2mms[22m
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+[2m┃[22m Network  [2muse --host to expose[22m
+[2m22:29:19[22m [32mwatching for file changes...[39m
+
+[43m[30m update [39m[49m [33m▶ New version of Astro available: 6.4.6[39m
+  Run [36mpnpm dlx @astrojs/upgrade[39m to update
+
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:90:1 Unused CSS selector ".play-btn"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:103:1 Unused CSS selector ".play-btn:hover"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:108:1 Unused CSS selector ".play-btn:active"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:113:1 Unused CSS selector ".play-icon"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:126:1 Unused CSS selector ".nav-btn :global(svg)"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:160:2 Unused CSS selector ".nav-btn :global(svg)"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/common/AccordionDrawer.svelte:12:2 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/TrackListItem.svelte:153:1 Unused CSS selector ".now-playing"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/TrackListItem.svelte:160:1 Unused CSS selector ":global(.dark) .now-playing"
+https://svelte.dev/e/css_unused_selector
+22:29:47 [vite-plugin-svelte] src/components/widgets/music-player/molecules/VolumeControl.svelte:40:1 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated
+22:29:49 [vite-plugin-svelte] src/components/misc/SharePoster.svelte:405:1 Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events
+22:29:49 [vite-plugin-svelte] src/components/misc/SharePoster.svelte:405:1 `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions
+22:29:49 [vite-plugin-svelte] src/components/misc/SharePoster.svelte:411:2 Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events
+22:29:49 [vite-plugin-svelte] src/components/misc/SharePoster.svelte:411:2 `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions
+[2m22:29:50[22m [34m[200][39m / [2m1742ms[22m
+[2m22:30:49[22m [34m[glob-loader][39m Reloaded data from [32mclawcloud-vless-ws.md[39m
+[2m22:31:04[22m [34m[glob-loader][39m Reloaded data from [32mwelcome.md[39m
+[2m22:31:25[22m [34m[200][39m / [2m269ms[22m
+[2m22:31:25[22m [34m[vite][39m [32m✨ new dependencies optimized: [33mastro/runtime/client/dev-toolbar/entrypoint.js, @swup/astro/serialise, @swup/astro/idle, @swup/astro/client/Swup, @swup/astro/client/SwupA11yPlugin, @swup/astro/client/SwupScriptsPlugin[32m[39m
+[2m22:31:25[22m [34m[vite][39m [32m✨ optimized dependencies changed. reloading[39m
+[2m22:31:27[22m [33m[404][39m /assets/home/home-1.webp [2m204ms[22m
+22:31:27 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:232:1 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:27 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:251:3 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:27 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:272:6 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:27 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:296:5 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:27 [vite-plugin-svelte] src/components/organisms/navigation/Search.svelte:241:1 Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events
+[2m22:31:27[22m [34m[200][39m /_image/ [2m446ms[22m
+[2m22:31:28[22m [34m[vite][39m [32m✨ new dependencies optimized: [33m@fancyapps/ui[32m[39m
+[2m22:31:28[22m [34m[vite][39m [32m✨ optimized dependencies changed. reloading[39m
+[2m22:31:28[22m [34m[200][39m / [2m62ms[22m
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:90:1 Unused CSS selector ".play-btn"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:103:1 Unused CSS selector ".play-btn:hover"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:108:1 Unused CSS selector ".play-btn:active"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:113:1 Unused CSS selector ".play-icon"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:126:1 Unused CSS selector ".nav-btn :global(svg)"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/SidebarControls.svelte:160:2 Unused CSS selector ".nav-btn :global(svg)"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-player/molecules/VolumeControl.svelte:40:1 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated
+22:31:28 [vite-plugin-svelte] src/components/widgets/common/AccordionDrawer.svelte:12:2 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/TrackListItem.svelte:153:1 Unused CSS selector ".now-playing"
+https://svelte.dev/e/css_unused_selector
+22:31:28 [vite-plugin-svelte] src/components/widgets/music-sidebar/components/TrackListItem.svelte:160:1 Unused CSS selector ":global(.dark) .now-playing"
+https://svelte.dev/e/css_unused_selector
+[2m22:31:29[22m [33m[404][39m /assets/home/home-1.webp [2m40ms[22m
+22:31:29 [vite-plugin-svelte] src/components/organisms/navigation/Search.svelte:241:1 Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events
+22:31:29 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:232:1 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:29 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:251:3 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:29 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:272:6 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+22:31:29 [vite-plugin-svelte] src/components/features/toc/MobileTOC.svelte:296:5 Using `on:click` to listen to the click event is deprecated. Use the event attribute `onclick` instead
+https://svelte.dev/e/event_directive_deprecated
+[2m22:31:30[22m [34m[200][39m /api/calendar-data.json [2m1ms[22m
+[2m23:03:12[22m [34m[watch][39m src/config.ts
+[2m23:03:12[22m [34m[watch][39m src/config.ts
+[vite] program reload
